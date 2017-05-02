@@ -6,11 +6,12 @@
 <fullyQualifiedTypeName name="java.awt.Point"/>
 <fullyQualifiedTypeName name="java.awt.GridLayout"/>
 <fullyQualifiedTypeName name="Dane.Stałe"/>
-<fullyQualifiedTypeName name="Dane.Statyczne"/>
-<fullyQualifiedTypeName name="Logika.Klient"/>
-<fullyQualifiedTypeName name="Dane.Stale.RozmiaryObrazów"/>
 <fullyQualifiedTypeName name="java.awt.event.ActionEvent"/>
-<fullyQualifiedTypeName name="Dane.Stale"/>
 <fullyQualifiedTypeName name="Interfejs.Kasa"/>
 <fullyQualifiedTypeName name="Dane.Stale.Liczebnosci"/>
+<fullyQualifiedTypeName name="Dane.Stale"/>
+<fullyQualifiedTypeName name="Dane.Stale.RozmiaryObrazów"/>
+<fullyQualifiedTypeName name="Logika.Klient"/>
+<fullyQualifiedTypeName name="Logika.Sklep"/>
+<fullyQualifiedTypeName name="Dane.Statyczne"/>
 </qualifiedTypeNameHistroy>

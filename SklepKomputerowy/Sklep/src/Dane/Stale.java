@@ -18,5 +18,6 @@ public class Stale {
 		public static final int kasaMax = 11;
 		public static final int klientMax = 30; 
 	}
+	
 }
 

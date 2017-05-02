@@ -1,0 +1,68 @@
+package Interfejs;
+
+import java.util.Vector;
+
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+
+import Dane.Stale;
+import Logika.Klient;
+
+public class Kasa {
+
+	private Vector<Klient> kolejka = new Vector<Klient>();
+	
+	private JLabel obrazKasy;
+	
+	private boolean czyWidoczna;
+	
+	public Kasa(){
+		
+		czyWidoczna = false;
+		
+		ImageIcon nowaKasa = new ImageIcon(getClass().getResource("kasa.png")); ;
+		
+		obrazKasy = new JLabel(nowaKasa);
+		
+		obrazKasy.setSize(Dane.Stale.RozmiaryObrazów.kasaX , Stale.RozmiaryObrazów.kasaY); 
+		
+		
+	}
+	
+	public boolean pobierzCzyWidoczna(){
+		return this.czyWidoczna;
+		
+	}
+	
+	public void usunKlientowZKolejki(){
+		kolejka.clear();
+	}
+	
+	public void ustawCzyWidoczna(boolean decyzja){
+		this.czyWidoczna = decyzja;
+	}
+	
+	
+	public JLabel pobierzEtykiete(){
+		return obrazKasy;
+	}
+	public void dodajKlientaDoKolejki(Klient klient){
+		
+		kolejka.add(klient);
+		
+	}
+	@SuppressWarnings("deprecation")
+	public void usunKlientaZKolejki(){
+		if(kolejka.size() == 0 ) return ;
+		kolejka.remove(0);
+		
+		for( int i = 0 ; i < kolejka.size(); i++ ){
+			kolejka.get(i).pobierzEtykiete().move(0, -Dane.Stale.RozmiaryObrazów.klientY);
+		}
+		
+		
+	}
+	public int pobierzDlugoscKolejki(){
+		return kolejka.size();
+	}
+}

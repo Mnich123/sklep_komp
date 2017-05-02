@@ -16,13 +16,13 @@ import Logika.Klient;
 
 public class Okno extends JFrame {
 	private static final long serialVersionUID = 1L;
-	
 
 	private Vector<Kasa> kasy = new Vector<Kasa>();
-	//private Vector<JLabel> klienci = new Vector<JLabel>();
+	// private Vector<JLabel> klienci = new Vector<JLabel>();
 	private Vector<Klient> klienci = new Vector<Klient>();
-	
+
 	private int licznikKlientow = 0, licznikKas = 1;
+	private int liczbaKlientow = 0;
 
 	private JPanel myPanel;
 
@@ -38,43 +38,45 @@ public class Okno extends JFrame {
 	private JLabel l_sklep;
 	private JLabel l_kolejkaDoKasy;
 	private JLabel l_kolejkaDoReklamacji;
-	private JLabel l_i_klient;
-	private JLabel l_i_klient2;
-
+	private JLabel l_liczbaKlientow;
 
 	public Okno() {
-		
-		
+
 		setLayout(null);
 		////// ***** ETYKIETY *******////
 
-		/*
-		 * l_kasa = new JLabel("Kasa"); l_sklep = new JLabel("Sklep");
-		 * l_reklamacje = new JLabel("Reklamacje"); l_kolejkaDoKasy = new
-		 * JLabel("Liczba Kas:"); l_kolejkaDoReklamacji = new
-		 * JLabel("Reklamacje");
-		 * 
-		 * //Je¿eli nie ustawisz rozmiaru, to nie bedzie wyswietlane
-		 * 
-		 * l_kasa.setSize(l_kasa.getText().length()*8 ,10);
-		 * l_sklep.setSize(l_sklep.getText().length()*8 ,10);
-		 * l_reklamacje.setSize(l_reklamacje.getText().length()*8 ,10);
-		 * l_kolejkaDoKasy.setSize(l_kolejkaDoKasy.getText().length()*8 ,10);
-		 * l_kolejkaDoReklamacji.setSize(l_kolejkaDoReklamacji.getText().length(
-		 * )*8 ,10);
-		 * 
-		 * 
-		 * l_sklep.setLocation(new Point(20,20)); l_kasa.setLocation(new
-		 * Point(20,70)); l_reklamacje.setLocation(new Point(20,130));
-		 * l_kolejkaDoKasy.setLocation(new Point(20,180));
-		 * l_kolejkaDoReklamacji.setLocation(new Point(20,230));
-		 * 
-		 * 
-		 * add(l_kasa); add(l_reklamacje); add(l_sklep); add(l_kolejkaDoKasy);
-		 * add(l_kolejkaDoReklamacji);
-		 */
-
 		
+		  l_kasa = new JLabel("Kasa");
+		  l_sklep = new JLabel("Sklep");
+		  l_reklamacje = new JLabel("Reklamacje");
+		  l_kolejkaDoKasy = new JLabel("Liczba Kas:"); 
+		  l_liczbaKlientow = new JLabel("Liczba Klientow: " + licznikKlientow); 
+		  l_kolejkaDoReklamacji = new JLabel("Reklamacje");
+		  
+		  //Je¿eli nie ustawisz rozmiaru, to nie bedzie wyswietlane
+		  
+		  l_kasa.setSize(l_kasa.getText().length()*8 ,10);
+		  l_sklep.setSize(l_sklep.getText().length()*8 ,10);
+		  l_reklamacje.setSize(l_reklamacje.getText().length()*8 ,10);
+		  l_kolejkaDoKasy.setSize(l_kolejkaDoKasy.getText().length()*8 ,10);
+		  l_kolejkaDoReklamacji.setSize(l_kolejkaDoReklamacji.getText().length()*8 ,10);
+		  l_liczbaKlientow.setSize(l_liczbaKlientow.getText().length()*8 ,10);
+		 
+		  
+		  l_sklep.setLocation(new Point(20,20)); l_kasa.setLocation(new
+		  Point(20,70)); l_reklamacje.setLocation(new Point(20,130));
+		  l_kolejkaDoKasy.setLocation(new Point(20,180));
+		  l_kolejkaDoReklamacji.setLocation(new Point(20,230));
+		  l_liczbaKlientow.setLocation(new Point(500,30));
+		  
+		  
+		  //add(l_kasa);
+		  //add(l_reklamacje);
+		  //add(l_sklep);
+		  //add(l_kolejkaDoKasy);
+		  //add(l_kolejkaDoReklamacji);
+		  add(l_liczbaKlientow);
+		 
 
 		////// ****** PRZYCISKI ******///////
 
@@ -105,91 +107,101 @@ public class Okno extends JFrame {
 		add(b_resetuj);
 		// add(b_start);
 		// add(b_stop);
-		
-		
-		b_dodajKlienta.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				    dodajKlienta();
-				  } 
-				});
-		
-		b_dodajKase.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				    dodajKase();
-				  } 
-				});
-		
-		b_resetuj.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				    resetuj();
-				  } 
-				});
-		
+
+		b_dodajKlienta.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dodajKlienta();
+			}
+		});
+
+		b_dodajKase.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dodajKase();
+			}
+		});
+
+		b_resetuj.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				usunKlientaZKolejki(0);
+			}
+		});
+
 		inicjalizujKlientow();
 		inicjalizujKasy();
 
 	}
-	
-	public void inicjalizujKlientow(){
-		for( int i = 0 ; i < Dane.Stale.Liczebnosci.klientMax; i++ ){
+
+	public void inicjalizujKlientow() {
+		for (int i = 0; i < Dane.Stale.Liczebnosci.klientMax; i++) {
 			klienci.add(new Klient());
 		}
 	}
-	public void inicjalizujKasy(){
-		for( int i = 0 ; i < Dane.Stale.Liczebnosci.kasaMax; i++ ){
-			kasy.add(new Kasa());
+
+	public void inicjalizujKasy() {
+		for (int i = 0; i < Dane.Stale.Liczebnosci.kasaMax; i++) {
+			kasy.add(new Kasa(i));
+			kasy.lastElement().ustawOkno(this);
 		}
 	}
-	
-	public void resetuj(){
-		for( int i = 0 ; i < Dane.Stale.Liczebnosci.klientMax ; i++){
-			if(klienci.get(i).pobierzCzyWKolejce()){
+
+	public void resetuj() {
+		for (int i = 0; i < Dane.Stale.Liczebnosci.klientMax; i++) {
+			if (klienci.get(i).pobierzCzyWKolejce()) {
 				remove(klienci.get(i).pobierzEtykiete());
 				klienci.get(i).ustawCzyWKolejce(false);
 			}
-			
+
 		}
 		licznikKlientow = 0;
 		
-		for( int i = 0 ; i < Dane.Stale.Liczebnosci.kasaMax ; i++){
-			if(kasy.get(i).pobierzCzyWidoczna()){
+		Dane.Statyczne.wlaczenieKas = false;
+		for (int i = 0; i < Dane.Stale.Liczebnosci.kasaMax; i++) {
+			if (kasy.get(i).pobierzCzyWidoczna()) {
 				kasy.get(i).usunKlientowZKolejki();
 				remove(kasy.get(i).pobierzEtykiete());
 				kasy.get(i).ustawCzyWidoczna(false);
+				
 			}
-			
+
 		}
 		licznikKas = 1;
-		
 
 		revalidate();
-		
+
 		repaint();
+		
+
+		Dane.Statyczne.wlaczenieKas = true;
 	}
+
 	public void dodajKase() {
 
-		kasy.get(licznikKas-1).pobierzEtykiete().setLocation((licznikKas) * (Stale.RozmiaryObrazów.kasaX + 10),60);
-		kasy.get(licznikKas-1).ustawCzyWidoczna(true);
-		add(kasy.get(licznikKas-1).pobierzEtykiete());
+		kasy.get(licznikKas - 1).pobierzEtykiete().setLocation((licznikKas) * (Stale.RozmiaryObrazów.kasaX + 10), 60);
+		kasy.get(licznikKas - 1).ustawCzyWidoczna(true);
 		
+		Thread nowyWatek = new Thread(kasy.get(licznikKas - 1));
+		
+		nowyWatek.start();
+		add(kasy.get(licznikKas - 1).pobierzEtykiete());
+
 		licznikKas++;
 
 		revalidate();
-		
+
 		repaint();
 
 	}
 
-	
 	public void dodajKlienta() {
-		
-		if(licznikKlientow == Dane.Stale.Liczebnosci.klientMax - 1 || licznikKas == 1)return;
-		
-		
+
+		if (liczbaKlientow == Dane.Stale.Liczebnosci.klientMax || licznikKas == 1)
+			return;
+
 		int min = 0;
 
-		for (int i = 0 ; i < licznikKas - 1; i++) {
-			if(kasy.get(i).pobierzDlugoscKolejki() == 0){
+		for (int i = 0; i < licznikKas - 1; i++) {
+			if (kasy.get(i).pobierzDlugoscKolejki() == 0) {
 				min = i;
 				break;
 			}
@@ -197,33 +209,64 @@ public class Okno extends JFrame {
 				min = i;
 			}
 		}
-		
-		for( int i = 0 ; i <Dane.Stale.Liczebnosci.klientMax; i++ ){
 
-			if(klienci.get(licznikKlientow).pobierzCzyWKolejce()){
-				licznikKlientow = ++licznikKlientow%Dane.Stale.Liczebnosci.klientMax;
-			}
-			else{
+		for (int i = 0; i < Dane.Stale.Liczebnosci.klientMax; i++) {
+
+			if (klienci.get(licznikKlientow).pobierzCzyWKolejce()) {
+				licznikKlientow = ++licznikKlientow % Dane.Stale.Liczebnosci.klientMax;
+			} else {
 				klienci.get(licznikKlientow).ustawCzyWKolejce(true);
 				break;
 			}
-			
+
 		}
-		//ustawianie klienta w kolejce
-		
-		klienci.get(licznikKlientow).pobierzEtykiete().setLocation(( min + 1) * (Stale.RozmiaryObrazów.kasaX + 10) + 30, (kasy.get(min).pobierzDlugoscKolejki() + 1)*(Stale.RozmiaryObrazów.klientY + 5) + 130  );
-		
+		// ustawianie klienta w kolejce
+
+		klienci.get(licznikKlientow).pobierzEtykiete().setLocation((min + 1) * (Stale.RozmiaryObrazów.kasaX + 10) + 30,
+				(kasy.get(min).pobierzDlugoscKolejki() + 1) * (Stale.RozmiaryObrazów.klientY + 5) + 130);
+
 		kasy.get(min).dodajKlientaDoKolejki(klienci.get(licznikKlientow));
-		
+
 		add(klienci.get(licznikKlientow).pobierzEtykiete());
 		
+		liczbaKlientow++;
+		
+		l_liczbaKlientow.setText("Liczba Klientow: " + (liczbaKlientow ));
+
 		revalidate();
-		
+
 		repaint();
-		
-		
+
 	}
 
+	public void usunKlientaZKolejki(int indeksKolejki) {
+
+		if (kasy.get(indeksKolejki).pobierzCzyWidoczna()) {
+
+			if (kasy.get(indeksKolejki).pobierzDlugoscKolejki() != 0) {
+
+				remove(kasy.get(indeksKolejki).pobierzPierwszegoKlienta().pobierzEtykiete());
+
+				kasy.get(indeksKolejki).usunKlientaZKolejki();
+				
+				liczbaKlientow--;
+
+				l_liczbaKlientow.setText("Liczba Klientow: " + (liczbaKlientow ));
+
+				revalidate();
+
+				repaint();
+				
+			}
+
+		}
+
+	}
+	
+	public Okno pobierzOkno(){
+		return this;
+	}
+	
 	public static void main(String args[]) {
 
 		Okno okno = new Okno();
