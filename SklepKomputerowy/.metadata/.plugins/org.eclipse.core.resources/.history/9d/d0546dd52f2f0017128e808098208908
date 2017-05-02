@@ -1,0 +1,22 @@
+package Dane;
+
+
+public class Stale {
+	
+	public final class RozmiaryObrazów {
+		
+		public static final int kasaX = 100;
+		public static final int kasaY = 89;
+		public static final int klientX = 20;
+		public static final int klientY = 29;
+		
+		
+	}
+	
+	public final class Liczebnosci{
+
+		public static final int kasaMax = 11;
+		public static final int klientMax = 60; 
+	}
+}
+

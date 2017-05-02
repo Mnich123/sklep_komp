@@ -13,8 +13,11 @@ public class Klient extends Osoba {
 
 	private JLabel obrazKlienta;
 	
+	private boolean czyWKolejce;
+	
 	public Klient(){
 		
+		this.czyWKolejce = false;
 		ImageIcon nowyKlient = new ImageIcon(getClass().getResource("klient.png")); ;
 		
 		obrazKlienta = new JLabel(nowyKlient);
@@ -27,7 +30,13 @@ public class Klient extends Osoba {
 		return obrazKlienta;
 	}
 	
+	public boolean pobierzCzyWKolejce(){
+		return this.czyWKolejce;
+	}
 	
+	public void ustawCzyWKolejce(boolean decyzja){
+		this.czyWKolejce = decyzja;	
+	}
 	public void dodajProdukt( Produkt produkt){
 		koszyk.add(produkt);
 	}

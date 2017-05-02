@@ -1,11 +1,9 @@
 package Interfejs;
 
-import Dane.Stale;
-import Logika.Klient;
-
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -13,17 +11,25 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import Dane.Stale;
+import Logika.Klient;
+
 public class Okno extends JFrame {
 	private static final long serialVersionUID = 1L;
+	
 
 	private Vector<Kasa> kasy = new Vector<Kasa>();
-	private Vector<JLabel> klienci = new Vector<JLabel>();
+	//private Vector<JLabel> klienci = new Vector<JLabel>();
+	private Vector<Klient> klienci = new Vector<Klient>();
+	
+	private int licznikKlientow = 0, licznikKas = 1;
 
 	private JPanel myPanel;
 
 	private JButton b_dodajProdukt;
 	private JButton b_dodajKlienta;
 	private JButton b_dodajKase;
+	private JButton b_resetuj;
 	private JButton b_start;
 	private JButton b_stop;
 
@@ -37,7 +43,8 @@ public class Okno extends JFrame {
 
 
 	public Okno() {
-
+		
+		
 		setLayout(null);
 		////// ***** ETYKIETY *******////
 
@@ -74,24 +81,28 @@ public class Okno extends JFrame {
 		b_dodajProdukt = new JButton("Dodaj Produkt");
 		b_dodajKlienta = new JButton("Dodaj Klienta");
 		b_dodajKase = new JButton("Dodaj Kase");
+		b_resetuj = new JButton("Resetuj");
 		// b_start = new JButton("START");
 		// b_stop = new JButton("STOP");
 
 		b_dodajProdukt.setSize(b_dodajProdukt.getText().length() * 8 + 20, 30);
 		b_dodajKlienta.setSize(b_dodajKlienta.getText().length() * 8 + 20, 30);
 		b_dodajKase.setSize(b_dodajKase.getText().length() * 8 + 20, 30);
+		b_resetuj.setSize(b_resetuj.getText().length() * 8 + 30, 30);
 		// b_start.setSize(b_start.getText().length()* 8 + 50,30);
 		// b_stop.setSize(b_stop.getText().length()* 8 + 50,30);
 
 		b_dodajKlienta.setLocation(new Point(20, 20));
 		b_dodajKase.setLocation(new Point(150, 20));
 		b_dodajProdukt.setLocation(new Point(260, 20));
+		b_resetuj.setLocation(new Point(400, 20));
 		// b_start.setLocation(new Point(150,250));
 		// b_stop.setLocation(new Point(260,250));
 
 		add(b_dodajProdukt);
 		add(b_dodajKlienta);
 		add(b_dodajKase);
+		add(b_resetuj);
 		// add(b_start);
 		// add(b_stop);
 		
@@ -102,45 +113,82 @@ public class Okno extends JFrame {
 				  } 
 				});
 		
+		b_dodajKase.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				    dodajKase();
+				  } 
+				});
 		
-		dodajKase();
-		dodajKlienta();
-		dodajKlienta();
-		dodajKlienta();
-		dodajKlienta();
-		dodajKase();
-		dodajKlienta();
-		dodajKlienta();
-		dodajKase();
-		dodajKase();
-		dodajKlienta();
-		dodajKlienta();
-		dodajKase();
-
-		dodajKlienta();
-		dodajKlienta();
-		dodajKlienta();
-		dodajKlienta();
-		dodajKlienta();
-		dodajKlienta();
+		b_resetuj.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				    resetuj();
+				  } 
+				});
+		
+		inicjalizujKlientow();
+		inicjalizujKasy();
 
 	}
+	
+	public void inicjalizujKlientow(){
+		for( int i = 0 ; i < Dane.Stale.Liczebnosci.klientMax; i++ ){
+			klienci.add(new Klient());
+		}
+	}
+	public void inicjalizujKasy(){
+		for( int i = 0 ; i < Dane.Stale.Liczebnosci.kasaMax; i++ ){
+			kasy.add(new Kasa());
+		}
+	}
+	
+	public void resetuj(){
+		for( int i = 0 ; i < Dane.Stale.Liczebnosci.klientMax ; i++){
+			if(klienci.get(i).pobierzCzyWKolejce()){
+				remove(klienci.get(i).pobierzEtykiete());
+				klienci.get(i).ustawCzyWKolejce(false);
+			}
+			
+		}
+		licznikKlientow = 0;
+		
+		for( int i = 0 ; i < Dane.Stale.Liczebnosci.kasaMax ; i++){
+			if(kasy.get(i).pobierzCzyWidoczna()){
+				kasy.get(i).usunKlientowZKolejki();
+				remove(kasy.get(i).pobierzEtykiete());
+				kasy.get(i).ustawCzyWidoczna(false);
+			}
+			
+		}
+		licznikKas = 1;
+		
 
+		revalidate();
+		
+		repaint();
+	}
 	public void dodajKase() {
 
-		kasy.add(new Kasa());
+		kasy.get(licznikKas-1).pobierzEtykiete().setLocation((licznikKas) * (Stale.RozmiaryObrazów.kasaX + 10),60);
+		kasy.get(licznikKas-1).ustawCzyWidoczna(true);
+		add(kasy.get(licznikKas-1).pobierzEtykiete());
 		
-		kasy.lastElement().pobierzEtykiete().setLocation((kasy.size()) * (Stale.RozmiaryObrazów.kasaX + 10),150);
+		licznikKas++;
+
+		revalidate();
 		
-		add(kasy.lastElement().pobierzEtykiete());
+		repaint();
 
 	}
 
+	
 	public void dodajKlienta() {
-
+		
+		if(licznikKlientow == Dane.Stale.Liczebnosci.klientMax - 1 || licznikKas == 1)return;
+		
+		
 		int min = 0;
 
-		for (int i = 0 ; i < kasy.size(); i++) {
+		for (int i = 0 ; i < licznikKas - 1; i++) {
 			if(kasy.get(i).pobierzDlugoscKolejki() == 0){
 				min = i;
 				break;
@@ -150,27 +198,32 @@ public class Okno extends JFrame {
 			}
 		}
 		
-		Klient nowyKlient = new Klient();
-		
-		//ustawianie klienta w kolejce
-		nowyKlient.pobierzEtykiete().setLocation((kasy.get(min).pobierzDlugoscKolejki() + 1)*(Stale.RozmiaryObrazów.klientX + 5) + Stale.RozmiaryObrazów.kasaX, ( min + 2) * (Stale.RozmiaryObrazów.kasaY + 10) + 30);
+		for( int i = 0 ; i <Dane.Stale.Liczebnosci.klientMax; i++ ){
 
-		nowyKlient.pobierzEtykiete().setLocation(( min + 1) * (Stale.RozmiaryObrazów.kasaX + 10) + 30, (kasy.get(min).pobierzDlugoscKolejki() + 1)*(Stale.RozmiaryObrazów.klientY + 5) + 220  );
-
-		kasy.get(min).dodajKlientaDoKolejki(nowyKlient);
-		
-		add(nowyKlient.pobierzEtykiete());
-
-
-	}
-
-	public class Zdarzenie1 implements ActionListener{
-		
-		public void actionPerformed(ActionEvent e){
-				dodajKlienta();
+			if(klienci.get(licznikKlientow).pobierzCzyWKolejce()){
+				licznikKlientow = ++licznikKlientow%Dane.Stale.Liczebnosci.klientMax;
+			}
+			else{
+				klienci.get(licznikKlientow).ustawCzyWKolejce(true);
+				break;
+			}
+			
 		}
+		//ustawianie klienta w kolejce
+		
+		klienci.get(licznikKlientow).pobierzEtykiete().setLocation(( min + 1) * (Stale.RozmiaryObrazów.kasaX + 10) + 30, (kasy.get(min).pobierzDlugoscKolejki() + 1)*(Stale.RozmiaryObrazów.klientY + 5) + 130  );
+		
+		kasy.get(min).dodajKlientaDoKolejki(klienci.get(licznikKlientow));
+		
+		add(klienci.get(licznikKlientow).pobierzEtykiete());
+		
+		revalidate();
+		
+		repaint();
+		
 		
 	}
+
 	public static void main(String args[]) {
 
 		Okno okno = new Okno();

@@ -14,7 +14,11 @@ public class Kasa {
 	
 	private JLabel obrazKasy;
 	
+	private boolean czyWidoczna;
+	
 	public Kasa(){
+		
+		czyWidoczna = false;
 		
 		ImageIcon nowaKasa = new ImageIcon(getClass().getResource("kasa.png")); ;
 		
@@ -24,6 +28,20 @@ public class Kasa {
 		
 		
 	}
+	
+	public boolean pobierzCzyWidoczna(){
+		return this.czyWidoczna;
+		
+	}
+	
+	public void usunKlientowZKolejki(){
+		kolejka.clear();
+	}
+	
+	public void ustawCzyWidoczna(boolean decyzja){
+		this.czyWidoczna = decyzja;
+	}
+	
 	
 	public JLabel pobierzEtykiete(){
 		return obrazKasy;

@@ -12,5 +12,11 @@ public class Stale {
 		
 		
 	}
+	
+	public final class Liczebnosci{
+
+		public static final int kasaMax = 11;
+		public static final int klientMax = 30; 
+	}
 }
 
