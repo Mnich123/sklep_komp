@@ -228,7 +228,7 @@ public class Okno extends JFrame {
 
 		Okno okno = new Okno();
 		okno.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		okno.setSize(500, 500);
+		okno.setSize(1000, 700);
 		okno.setVisible(true);
 		okno.setTitle("Sklep Komputerowy");
 
