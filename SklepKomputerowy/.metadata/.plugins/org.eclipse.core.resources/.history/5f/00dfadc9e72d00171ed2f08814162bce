@@ -1,0 +1,14 @@
+package Logika;
+
+import java.util.concurrent.Semaphore;
+
+public enum Semafory {
+	reklamacje(new Semaphore(0)),
+	kupno(new Semaphore(0));
+	
+	
+	
+	private Semafory(final Semaphore cos){
+		
+	}
+}

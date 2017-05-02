@@ -1,0 +1,10 @@
+package Logika;
+
+public class Klient extends Osoba {
+
+	@Override
+	public boolean equals(Object o) {
+		Klient k = (Klient) o;
+		return this.pobierzPESEL() == k.pobierzPESEL();
+	}
+}
