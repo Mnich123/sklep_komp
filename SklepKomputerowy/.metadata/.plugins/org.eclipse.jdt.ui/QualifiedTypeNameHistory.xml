@@ -7,12 +7,14 @@
 <fullyQualifiedTypeName name="Dane.Stałe"/>
 <fullyQualifiedTypeName name="java.awt.event.ActionEvent"/>
 <fullyQualifiedTypeName name="Interfejs.Kasa"/>
-<fullyQualifiedTypeName name="Dane.Stale.Liczebnosci"/>
-<fullyQualifiedTypeName name="Dane.Stale"/>
 <fullyQualifiedTypeName name="Dane.Stale.RozmiaryObrazów"/>
 <fullyQualifiedTypeName name="Logika.Klient"/>
 <fullyQualifiedTypeName name="Logika.Sklep"/>
-<fullyQualifiedTypeName name="Dane.Statyczne"/>
 <fullyQualifiedTypeName name="java.util.concurrent.Semaphore"/>
+<fullyQualifiedTypeName name="java.lang.Thread"/>
 <fullyQualifiedTypeName name="Dane.Semafory"/>
+<fullyQualifiedTypeName name="java.util.concurrent.TimeUnit"/>
+<fullyQualifiedTypeName name="Dane.Statyczne"/>
+<fullyQualifiedTypeName name="Dane.Stale"/>
+<fullyQualifiedTypeName name="Dane.Stale.Liczebnosci"/>
 </qualifiedTypeNameHistroy>

@@ -1,5 +1,6 @@
 package Interfejs;
 
+import java.util.Random;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
@@ -13,7 +14,9 @@ import Logika.Sklep;
 public class Kasa implements Runnable {
 
 	private Vector<Klient> kolejka = new Vector<Klient>();
-
+	
+	private Random random = new Random();
+	
 	private JLabel obrazKasy;
 
 	private int id;
@@ -43,6 +46,24 @@ public class Kasa implements Runnable {
 	public void usunKlientowZKolejki() {
 		kolejka.clear();
 	}
+	
+	public void usunKlientaZKolejki() {
+	
+			
+			kolejka.get(0).ustawCzyWKolejce(false);
+	
+			kolejka.remove(0);
+			
+			if (kolejka.size() == 0)
+				return;
+	
+			// ustawianie klientów o jeden do przodu
+			for (int i = 0; i < kolejka.size(); i++) {
+				kolejka.get(i).pobierzEtykiete().setLocation(kolejka.get(i).pobierzEtykiete().getX(),
+						kolejka.get(i).pobierzEtykiete().getY() - Dane.Stale.RozmiaryObrazów.klientY - 5);
+			}
+	
+		}
 
 	public void ustawCzyWidoczna(boolean decyzja) {
 		this.czyWidoczna = decyzja;
@@ -59,22 +80,6 @@ public class Kasa implements Runnable {
 	public void dodajKlientaDoKolejki(Klient klient) {
 
 		kolejka.add(klient);
-
-	}
-
-	public void usunKlientaZKolejki() {
-
-		if (kolejka.size() == 0)
-			return;
-
-		kolejka.get(0).ustawCzyWKolejce(false);
-
-		kolejka.remove(0);
-
-		for (int i = 0; i < kolejka.size(); i++) {
-			kolejka.get(i).pobierzEtykiete().setLocation(kolejka.get(i).pobierzEtykiete().getX(),
-					kolejka.get(i).pobierzEtykiete().getY() - Dane.Stale.RozmiaryObrazów.klientY - 5);
-		}
 
 	}
 
@@ -99,8 +104,9 @@ public class Kasa implements Runnable {
 	}
 
 	public void realizujUsluge() {
+		
 		try {
-			TimeUnit.MILLISECONDS.sleep(300);
+			TimeUnit.MILLISECONDS.sleep(random.nextInt(1000));
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -114,15 +120,17 @@ public class Kasa implements Runnable {
 	public void run() {
 		while (Dane.Statyczne.wlaczenieKas) {
 			
-			try {
-				Dane.Semafory.semKasy.get(id).acquire();
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			if (kolejka.size() != 0) {
-
+			if(Dane.Statyczne.pauza){
 				try {
+					TimeUnit.MILLISECONDS.sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				continue;
+			}
+
+			try {
+					Dane.Semafory.semKasy.get(id).acquire();
 					Dane.Semafory.semSklep.acquire();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
@@ -134,17 +142,19 @@ public class Kasa implements Runnable {
 				}
 
 				realizujUsluge();
+				
 				okno.usunKlientaZKolejki(id);
-
+				
 				Dane.Semafory.semSklep.release();
 				try {
-					TimeUnit.MILLISECONDS.sleep(100);
+					TimeUnit.MILLISECONDS.sleep(1);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
 
-		}
+		
 
 	}
+	
 }

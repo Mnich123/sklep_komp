@@ -1,9 +1,5 @@
 package Logika;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Vector;
 
 public class Sklep implements Runnable {
 
@@ -18,9 +14,11 @@ public class Sklep implements Runnable {
 
 	}
 
+	
 	public Sklep pobierzSklep() {
 		return this;
 	}
+	
 	public String pobierzNazwe(){
 		return this.nazwa;
 	}
