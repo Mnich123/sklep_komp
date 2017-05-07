@@ -30,6 +30,17 @@ public class Klient extends Osoba {
 		return obrazKlienta;
 	}
 	
+	public String pobierzProdukty(){
+		
+		String wszytkieProdukty = "";
+		
+		for( int i = 0 ; i < koszyk.size(); i++){
+			wszytkieProdukty+= koszyk.get(i).pobierzNazwe() + "\n";
+			
+		}
+		
+		return wszytkieProdukty;
+	}
 	public boolean pobierzCzyWKolejce(){
 		return this.czyWKolejce;
 	}

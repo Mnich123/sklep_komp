@@ -31,11 +31,12 @@ public class Kasa implements Runnable {
 		czyWidoczna = false;
 
 		ImageIcon nowaKasa = new ImageIcon(getClass().getResource("kasa.png"));
-		;
 
 		obrazKasy = new JLabel(nowaKasa);
 
 		obrazKasy.setSize(Dane.Stale.RozmiaryObrazów.kasaX, Stale.RozmiaryObrazów.kasaY);
+
+
 
 	}
 
@@ -83,6 +84,10 @@ public class Kasa implements Runnable {
 		}
 		return null;
 	}
+	
+	public int pobierzId(){
+		return this.id;
+	}
 
 	public int pobierzDlugoscKolejki() {
 		return kolejka.size();
@@ -95,7 +100,7 @@ public class Kasa implements Runnable {
 
 	public void realizujUsluge() {
 		try {
-			TimeUnit.MILLISECONDS.sleep(200);
+			TimeUnit.MILLISECONDS.sleep(2000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

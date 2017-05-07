@@ -5,7 +5,6 @@ public class Main {
 	/*
 	 * TODO:
 	 * 
-	 * Dodaæ realizacjê us³ugi
 	 * Dodaæ etykiety informuj¹ce o: liczbie osób w kolejce przy kasie, ogólnej liczbie klientow, 
 	 * Dodaæ wyœwietlanie produktów, które wzi¹³ do koszyka klient poprzez najechanie albo kliekniêcie na klienta
 	 * 

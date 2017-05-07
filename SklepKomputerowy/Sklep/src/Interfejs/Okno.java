@@ -3,13 +3,13 @@ package Interfejs;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.ToolTipManager;
 
 import Dane.Stale;
 import Logika.Klient;
@@ -20,6 +20,7 @@ public class Okno extends JFrame {
 	private Vector<Kasa> kasy = new Vector<Kasa>();
 	// private Vector<JLabel> klienci = new Vector<JLabel>();
 	private Vector<Klient> klienci = new Vector<Klient>();
+	private Vector<JLabel> kasyEtykiety = new Vector<JLabel>();
 
 	private int licznikKlientow = 0, licznikKas = 1;
 	private int liczbaKlientow = 0;
@@ -135,6 +136,7 @@ public class Okno extends JFrame {
 	public void inicjalizujKlientow() {
 		for (int i = 0; i < Dane.Stale.Liczebnosci.klientMax; i++) {
 			klienci.add(new Klient());
+			klienci.lastElement().pobierzEtykiete().setToolTipText(klienci.lastElement().pobierzImie() + klienci.lastElement().pobierzProdukty());
 		}
 	}
 
@@ -142,6 +144,7 @@ public class Okno extends JFrame {
 		for (int i = 0; i < Dane.Stale.Liczebnosci.kasaMax; i++) {
 			kasy.add(new Kasa(i));
 			kasy.lastElement().ustawOkno(this);
+			kasyEtykiety.add(new JLabel("Klientow : 0"));
 		}
 	}
 
@@ -160,6 +163,7 @@ public class Okno extends JFrame {
 			if (kasy.get(i).pobierzCzyWidoczna()) {
 				kasy.get(i).usunKlientowZKolejki();
 				remove(kasy.get(i).pobierzEtykiete());
+				remove(kasyEtykiety.get(i));
 				kasy.get(i).ustawCzyWidoczna(false);
 				
 			}
@@ -177,13 +181,19 @@ public class Okno extends JFrame {
 
 	public void dodajKase() {
 
-		kasy.get(licznikKas - 1).pobierzEtykiete().setLocation((licznikKas) * (Stale.RozmiaryObrazów.kasaX + 10), 60);
+		kasy.get(licznikKas - 1).pobierzEtykiete().setLocation((licznikKas) * (Stale.RozmiaryObrazów.kasaX + 10), 80);
 		kasy.get(licznikKas - 1).ustawCzyWidoczna(true);
+		kasy.get(licznikKas - 1).pobierzEtykiete().setToolTipText("To jest KASA nr." + kasy.get(licznikKas - 1).pobierzId());
 		
 		Thread nowyWatek = new Thread(kasy.get(licznikKas - 1));
 		
 		nowyWatek.start();
+		
 		add(kasy.get(licznikKas - 1).pobierzEtykiete());
+		kasyEtykiety.get(licznikKas).setLocation((licznikKas) * (Stale.RozmiaryObrazów.kasaX + 10), 55);
+		kasyEtykiety.get(licznikKas).setSize(kasyEtykiety.get(licznikKas).getText().length() * 8, 20);
+		
+		add(kasyEtykiety.get(licznikKas));
 
 		licznikKas++;
 
@@ -223,10 +233,11 @@ public class Okno extends JFrame {
 		// ustawianie klienta w kolejce
 
 		klienci.get(licznikKlientow).pobierzEtykiete().setLocation((min + 1) * (Stale.RozmiaryObrazów.kasaX + 10) + 30,
-				(kasy.get(min).pobierzDlugoscKolejki() + 1) * (Stale.RozmiaryObrazów.klientY + 5) + 130);
+				(kasy.get(min).pobierzDlugoscKolejki() + 1) * (Stale.RozmiaryObrazów.klientY + 5) + 150);
 
 		kasy.get(min).dodajKlientaDoKolejki(klienci.get(licznikKlientow));
-
+		kasyEtykiety.get(min).setText("Klienci: " + (kasy.get(min).pobierzDlugoscKolejki() + 1));
+		
 		add(klienci.get(licznikKlientow).pobierzEtykiete());
 		
 		liczbaKlientow++;
@@ -246,11 +257,13 @@ public class Okno extends JFrame {
 			if (kasy.get(indeksKolejki).pobierzDlugoscKolejki() != 0) {
 
 				remove(kasy.get(indeksKolejki).pobierzPierwszegoKlienta().pobierzEtykiete());
+				
 
 				kasy.get(indeksKolejki).usunKlientaZKolejki();
 				
 				liczbaKlientow--;
 
+				kasyEtykiety.get(indeksKolejki).setText("Klienci: " + (kasy.get(indeksKolejki).pobierzDlugoscKolejki() + 1));
 				l_liczbaKlientow.setText("Liczba Klientow: " + (liczbaKlientow ));
 
 				revalidate();
