@@ -244,17 +244,22 @@ public class Okno extends JFrame {
 				(kasy.get(min).pobierzDlugoscKolejki() + 1) * (Stale.RozmiaryObrazów.klientY + 5) + 150);
 
 		kasy.get(min).dodajKlientaDoKolejki(klienci.get(licznikKlientow));
-
-		kasyEtykiety.get(min).setText("Klienci: " + (kasy.get(min).pobierzDlugoscKolejki() ));
-
+		
 		add(klienci.get(licznikKlientow).pobierzEtykiete());
 		
 		Dane.Semafory.semKasy.get(min).release();
 		
 		liczbaKlientow++;
+		try {
+			TimeUnit.MILLISECONDS.sleep(20);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		kasyEtykiety.get(min).setText("Klienci: " + (kasy.get(min).pobierzDlugoscKolejki() ));
 		
 		l_liczbaKlientow.setText("Liczba Klientow: " + (liczbaKlientow ));
 		
+
 		revalidate();
 
 		repaint();

@@ -8,10 +8,6 @@ import java.util.Vector;
 public class Sklep implements Runnable {
 
 	private String nazwa;
-	private Set<Pracownik> pracownicy = new HashSet<Pracownik>();
-	private Set<Klient> klienci = new HashSet<Klient>();
-	private ArrayList<Dzia³> dzia³y = new ArrayList<Dzia³>();
-	private Vector<Komunikat> komunikaty = new Vector<Komunikat>();
 
 	public Sklep(String nazwa) {
 		this.nazwa = nazwa;
@@ -20,51 +16,6 @@ public class Sklep implements Runnable {
 
 	public Sklep() {
 
-	}
-
-	
-	public void ustaw() {
-		dzia³y.add(new Dzia³("Reklamacje", 1000, this));
-		dzia³y.add(new Dzia³("Kasy", 200, this));
-		dzia³y.add(new Dzia³("PunktObslugiKlienta", 300, this));
-		dzia³y.add(new Dzia³("Zwroty", 100, this));
-	}
-
-	public void dodajPracownika(Pracownik pracownik) {
-		try {
-			Dane.Semafory.semSklep.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		pracownicy.add(pracownik);
-
-		Dane.Semafory.semSklep.release();
-	}
-
-	public void dodajKlienta(Klient klient) {
-		try {
-			Dane.Semafory.semSklep.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		klienci.add(klient);
-
-		Dane.Semafory.semSklep.release();
-	}
-
-	public void dodajDzia³(Dzia³ dzia³) {
-		dzia³y.add(dzia³);
-	}
-
-	public void dodajKomunikat(Komunikat komunikat) {
-		try {
-			Dane.Semafory.semSklep.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		komunikaty.add(komunikat);
-
-		Dane.Semafory.semSklep.release();
 	}
 
 	public Sklep pobierzSklep() {

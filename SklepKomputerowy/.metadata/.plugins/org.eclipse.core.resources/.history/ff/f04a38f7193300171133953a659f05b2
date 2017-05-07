@@ -47,7 +47,7 @@ public class Dzia³ implements Runnable {
 		Komunikat komunikat = new Komunikat(this.nazwa, dateFormat.format(data),
 				" Zrealiowano usluge od klienta " + klient.pobierzPESEL());
 		kolejka.remove(0);
-		//sklep.dodajKomunikat(komunikat);
+		sklep.dodajKomunikat(komunikat);
 
 	}
 

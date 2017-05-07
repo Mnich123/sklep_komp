@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -244,17 +243,18 @@ public class Okno extends JFrame {
 				(kasy.get(min).pobierzDlugoscKolejki() + 1) * (Stale.RozmiaryObrazów.klientY + 5) + 150);
 
 		kasy.get(min).dodajKlientaDoKolejki(klienci.get(licznikKlientow));
-
-		kasyEtykiety.get(min).setText("Klienci: " + (kasy.get(min).pobierzDlugoscKolejki() ));
-
+		
 		add(klienci.get(licznikKlientow).pobierzEtykiete());
 		
 		Dane.Semafory.semKasy.get(min).release();
 		
 		liczbaKlientow++;
+
+		kasyEtykiety.get(min).setText("Klienci: " + (kasy.get(min + 1).pobierzDlugoscKolejki() ));
 		
 		l_liczbaKlientow.setText("Liczba Klientow: " + (liczbaKlientow ));
 		
+
 		revalidate();
 
 		repaint();

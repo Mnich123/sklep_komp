@@ -4,8 +4,6 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -146,8 +144,7 @@ public class Okno extends JFrame {
 		for (int i = 0; i < Dane.Stale.Liczebnosci.kasaMax; i++) {
 			kasy.add(new Kasa(i));
 			kasy.lastElement().ustawOkno(this);
-			kasyEtykiety.add(new JLabel("Klientow : "));
-			Dane.Semafory.semKasy.add(new Semaphore(0));
+			kasyEtykiety.add(new JLabel("Klientow : 0"));
 		}
 	}
 
@@ -207,15 +204,12 @@ public class Okno extends JFrame {
 	}
 
 	public void dodajKlienta() {
-		
-		
-		//jezeli nie ma kas lub klientow jest za duzo to koñcz
+
 		if (liczbaKlientow == Dane.Stale.Liczebnosci.klientMax || licznikKas == 1)
 			return;
 
 		int min = 0;
 
-		//znajdz indeks kasy o najmniejszej kolejce
 		for (int i = 0; i < licznikKas - 1; i++) {
 			if (kasy.get(i).pobierzDlugoscKolejki() == 0) {
 				min = i;
@@ -225,8 +219,7 @@ public class Okno extends JFrame {
 				min = i;
 			}
 		}
-		
-		//wybierz wolnego klienta
+
 		for (int i = 0; i < Dane.Stale.Liczebnosci.klientMax; i++) {
 
 			if (klienci.get(licznikKlientow).pobierzCzyWKolejce()) {
@@ -237,24 +230,20 @@ public class Okno extends JFrame {
 			}
 
 		}
-		
 		// ustawianie klienta w kolejce
 
 		klienci.get(licznikKlientow).pobierzEtykiete().setLocation((min + 1) * (Stale.RozmiaryObrazów.kasaX + 10) + 30,
 				(kasy.get(min).pobierzDlugoscKolejki() + 1) * (Stale.RozmiaryObrazów.klientY + 5) + 150);
 
 		kasy.get(min).dodajKlientaDoKolejki(klienci.get(licznikKlientow));
-
-		kasyEtykiety.get(min).setText("Klienci: " + (kasy.get(min).pobierzDlugoscKolejki() ));
-
-		add(klienci.get(licznikKlientow).pobierzEtykiete());
+		kasyEtykiety.get(min).setText("Klienci: " + (kasy.get(min).pobierzDlugoscKolejki() + 1));
 		
-		Dane.Semafory.semKasy.get(min).release();
+		add(klienci.get(licznikKlientow).pobierzEtykiete());
 		
 		liczbaKlientow++;
 		
 		l_liczbaKlientow.setText("Liczba Klientow: " + (liczbaKlientow ));
-		
+
 		revalidate();
 
 		repaint();

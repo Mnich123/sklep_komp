@@ -100,7 +100,7 @@ public class Kasa implements Runnable {
 
 	public void realizujUsluge() {
 		try {
-			TimeUnit.MILLISECONDS.sleep(300);
+			TimeUnit.MILLISECONDS.sleep(2000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -113,13 +113,6 @@ public class Kasa implements Runnable {
 	@Override
 	public void run() {
 		while (Dane.Statyczne.wlaczenieKas) {
-			
-			try {
-				Dane.Semafory.semKasy.get(id).acquire();
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 			if (kolejka.size() != 0) {
 
 				try {
