@@ -20,6 +20,7 @@ public class Okno extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	private Vector<Kasa> kasy = new Vector<Kasa>();
+	private Vector<Thread> kasyWatki = new Vector<Thread>();
 	// private Vector<JLabel> klienci = new Vector<JLabel>();
 	private Vector<Klient> klienci = new Vector<Klient>();
 	private Vector<JLabel> kasyEtykiety = new Vector<JLabel>();
@@ -84,29 +85,29 @@ public class Okno extends JFrame {
 		b_dodajKlienta = new JButton("Dodaj Klienta");
 		b_dodajKase = new JButton("Dodaj Kase");
 		b_resetuj = new JButton("Resetuj");
-		// b_start = new JButton("START");
-		// b_stop = new JButton("STOP");
+		b_start = new JButton("START");
+		b_stop = new JButton("STOP");
 
 		b_dodajProdukt.setSize(b_dodajProdukt.getText().length() * 8 + 20, 30);
 		b_dodajKlienta.setSize(b_dodajKlienta.getText().length() * 8 + 20, 30);
 		b_dodajKase.setSize(b_dodajKase.getText().length() * 8 + 20, 30);
 		b_resetuj.setSize(b_resetuj.getText().length() * 8 + 30, 30);
-		// b_start.setSize(b_start.getText().length()* 8 + 50,30);
-		// b_stop.setSize(b_stop.getText().length()* 8 + 50,30);
+		b_start.setSize(b_start.getText().length()* 8 + 50,30);
+		b_stop.setSize(b_stop.getText().length()* 8 + 50,30);
 
 		b_dodajKlienta.setLocation(new Point(20, 20));
 		b_dodajKase.setLocation(new Point(150, 20));
 		b_dodajProdukt.setLocation(new Point(260, 20));
 		b_resetuj.setLocation(new Point(400, 20));
-		// b_start.setLocation(new Point(150,250));
-		// b_stop.setLocation(new Point(260,250));
+		b_start.setLocation(new Point(630,20));
+		b_stop.setLocation(new Point(750,20));
 
 		add(b_dodajProdukt);
 		add(b_dodajKlienta);
 		add(b_dodajKase);
 		add(b_resetuj);
-		// add(b_start);
-		// add(b_stop);
+		add(b_start);
+		add(b_stop);
 
 		b_dodajKlienta.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -123,14 +124,35 @@ public class Okno extends JFrame {
 		b_resetuj.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				usunKlientaZKolejki(0);
+				resetuj();
 			}
 		});
+		
+		b_start.addActionListener(new ActionListener() {
 
+			public void actionPerformed(ActionEvent e) {
+				startuj();
+			}
+		});
+		
+		b_stop.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				stopuj();
+			}
+		});
+		
 		inicjalizujKlientow();
 		inicjalizujKasy();
+		for( int i = 0 ; i < 1000; i++){
 
-	}
+			dodajKase();
+				
+		}
+		for( int i = 0 ; i < 10000; i++){
+
+			dodajKlienta();
+		}	}
 
 	public void inicjalizujKlientow() {
 		for (int i = 0; i < Dane.Stale.Liczebnosci.klientMax; i++) {
@@ -143,12 +165,30 @@ public class Okno extends JFrame {
 	public void inicjalizujKasy() {
 		for (int i = 0; i < Dane.Stale.Liczebnosci.kasaMax; i++) {
 			kasy.add(new Kasa(i));
+			kasyWatki.add(new Thread(kasy.get(i)));
 			kasy.lastElement().ustawOkno(this);
-			kasyEtykiety.add(new JLabel("Klientow : "));
+			kasyEtykiety.add(new JLabel("Klienci : "));
 			Dane.Semafory.semKasy.add(new Semaphore(0));
 		}
 	}
-
+	
+	public synchronized void startuj(){
+		for( Thread t : kasyWatki){
+				t.notify();
+		}
+	}
+	
+	public synchronized void stopuj(){
+		for( Thread t : kasyWatki){
+			try {
+				t.wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public void resetuj() {
 		for (int i = 0; i < Dane.Stale.Liczebnosci.klientMax; i++) {
 			if (klienci.get(i).pobierzCzyWKolejce()) {
@@ -157,39 +197,60 @@ public class Okno extends JFrame {
 			}
 
 		}
-		licznikKlientow = 0;
+		
 
 		Dane.Statyczne.wlaczenieKas = false;
+		
+		try {
+			TimeUnit.MILLISECONDS.sleep(100);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		kasyWatki.clear();
+		Dane.Semafory.semKasy.clear();
+		Dane.Statyczne.wlaczenieKas = true;
+		
+		
 		for (int i = 0; i < Dane.Stale.Liczebnosci.kasaMax; i++) {
+			
 			if (kasy.get(i).pobierzCzyWidoczna()) {
 				kasy.get(i).usunKlientowZKolejki();
+				kasyEtykiety.get(i+1).setText("Klienci: 0");
 				remove(kasy.get(i).pobierzEtykiete());
-				remove(kasyEtykiety.get(i));
-				kasy.get(i).ustawCzyWidoczna(false);
-
+				remove(kasyEtykiety.get(i + 1));
 			}
 
+			kasyWatki.add(new Thread(kasy.get(i)));
+			Dane.Semafory.semKasy.add(new Semaphore(0));
+			kasy.get(i).ustawCzyWidoczna(false);
+
 		}
+		
 		licznikKas = 1;
+		licznikKlientow = 0;
+		liczbaKlientow = 0; 
+		
+
+		l_liczbaKlientow.setText("Liczba Klientow: " + licznikKlientow);
 
 		revalidate();
 
 		repaint();
 
-		Dane.Statyczne.wlaczenieKas = true;
 	}
 
 	public void dodajKase() {
+		
+		if(licznikKas == Dane.Stale.Liczebnosci.kasaMax) return ;
 
 		kasy.get(licznikKas - 1).pobierzEtykiete().setLocation((licznikKas) * (Stale.RozmiaryObrazów.kasaX + 10), 80);
 		kasy.get(licznikKas - 1).ustawCzyWidoczna(true);
 		kasy.get(licznikKas - 1).pobierzEtykiete()
 				.setToolTipText("To jest KASA nr." + kasy.get(licznikKas - 1).pobierzId());
 
-		Thread nowyWatek = new Thread(kasy.get(licznikKas - 1));
-
-		nowyWatek.start();
-
+		kasyWatki.get(licznikKas - 1 ).start();
+		
 		add(kasy.get(licznikKas - 1).pobierzEtykiete());
 		kasyEtykiety.get(licznikKas).setLocation((licznikKas) * (Stale.RozmiaryObrazów.kasaX + 10), 55);
 		kasyEtykiety.get(licznikKas).setSize(kasyEtykiety.get(licznikKas).getText().length() * 8, 20);
@@ -242,7 +303,7 @@ public class Okno extends JFrame {
 
 		kasy.get(min).dodajKlientaDoKolejki(klienci.get(licznikKlientow));
 
-		kasyEtykiety.get(min).setText("Klienci: " + (kasy.get(min).pobierzDlugoscKolejki()));
+		kasyEtykiety.get(min + 1).setText("Klienci: " + (kasy.get(min).pobierzDlugoscKolejki()));
 
 		add(klienci.get(licznikKlientow).pobierzEtykiete());
 
@@ -270,8 +331,8 @@ public class Okno extends JFrame {
 
 				liczbaKlientow--;
 
-				kasyEtykiety.get(indeksKolejki)
-						.setText("Klienci: " + (kasy.get(indeksKolejki).pobierzDlugoscKolejki() + 1));
+				kasyEtykiety.get(indeksKolejki + 1)
+						.setText("Klienci: " + (kasy.get(indeksKolejki).pobierzDlugoscKolejki()));
 				l_liczbaKlientow.setText("Liczba Klientow: " + (liczbaKlientow));
 
 				revalidate();

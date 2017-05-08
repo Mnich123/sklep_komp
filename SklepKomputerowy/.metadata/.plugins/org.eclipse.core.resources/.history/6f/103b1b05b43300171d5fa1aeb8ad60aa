@@ -105,12 +105,12 @@ public class Kasa implements Runnable {
 
 	public void realizujUsluge() {
 		
-		try {
+		/*try {
 			TimeUnit.MILLISECONDS.sleep(random.nextInt(100));
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
+		*/
 	}
 
 	public JLabel pobierzEtykiete() {
@@ -121,23 +121,18 @@ public class Kasa implements Runnable {
 	public void run() {
 		while (Dane.Statyczne.wlaczenieKas) {
 			
+			if(Dane.Statyczne.pauza){
+				try {
+					TimeUnit.MILLISECONDS.sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				continue;
+			}
 
 			try {
 					Dane.Semafory.semKasy.get(id).acquire();
 					Dane.Semafory.semSklep.acquire();
-					if(Dane.Statyczne.pauza){
-						try {
-							TimeUnit.MILLISECONDS.sleep(100);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-						finally{
-							Dane.Semafory.semSklep.release();
-							Dane.Semafory.semKasy.get(id).release();
-						}
-
-						continue;
-					}
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

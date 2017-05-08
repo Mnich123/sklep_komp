@@ -15,8 +15,8 @@ public class Stale {
 	
 	public final class Liczebnosci{
 
-		public static final int kasaMax = 1000;
-		public static final int klientMax = 10000; 
+		public static final int kasaMax = 7;
+		public static final int klientMax = 30; 
 	}
 	
 }

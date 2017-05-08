@@ -133,7 +133,6 @@ public class Kasa implements Runnable {
 						}
 						finally{
 							Dane.Semafory.semSklep.release();
-							Dane.Semafory.semKasy.get(id).release();
 						}
 
 						continue;

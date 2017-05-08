@@ -6,20 +6,16 @@
 		<list key="textEntries">
 			<item value="1"/>
 			<item value="1"/>
-			<item value="1"/>
 		</list>
 		<list key="orderedElements">
-			<item value="org.eclipse.ui.edit.text.folding.collapse_all"/>
 			<item value="org.eclipse.ui.edit.text.zoomIn"/>
 			<item value="org.eclipse.ui.edit.text.zoomOut"/>
 		</list>
 		<list key="orderedProviders">
 			<item value="org.eclipse.ui.commands"/>
 			<item value="org.eclipse.ui.commands"/>
-			<item value="org.eclipse.ui.commands"/>
 		</list>
 		<list key="textArray">
-			<item value="collap"/>
 			<item value="zoom in"/>
 			<item value="zoom"/>
 		</list>

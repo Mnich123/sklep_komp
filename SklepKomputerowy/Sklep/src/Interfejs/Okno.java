@@ -10,8 +10,6 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.ToolTipManager;
 
 import Dane.Stale;
 import Logika.Klient;
@@ -28,7 +26,6 @@ public class Okno extends JFrame {
 	private int licznikKlientow = 0, licznikKas = 1;
 	private int liczbaKlientow = 0;
 
-	private JPanel myPanel;
 
 	private JButton b_dodajProdukt;
 	private JButton b_dodajKlienta;
@@ -144,7 +141,14 @@ public class Okno extends JFrame {
 		
 		inicjalizujKlientow();
 		inicjalizujKasy();
+		for( int i = 0 ; i < 7; i++){
+			dodajKase();
+				
+		}
+		for( int i = 0 ; i < 100; i++){
 
+			dodajKlienta();
+		}	
 	}
 
 	public void inicjalizujKlientow() {
@@ -169,7 +173,7 @@ public class Okno extends JFrame {
 		Dane.Statyczne.pauza = false;
 	}
 	
-	public void stopuj(){
+	public synchronized void stopuj(){
 		Dane.Statyczne.pauza = true;
 	}
 	
