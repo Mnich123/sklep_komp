@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<!--
+  ~ konfiguracja klas
+  ~ skojarzenie pol klasy z kolumnami tabeli
+  ~ 
+  ~ 
+  -->
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="Logika">
+
+    <class name="Produkt" table="Produkt">
+        <id name="id" column="IDProduktu">
+            <generator class="increment"/>
+        </id>
+        <property name="Nazwa" column="Nazwa"/>
+        <property name="Cena" column="Cena"/>
+    </class>
+
+</hibernate-mapping>
