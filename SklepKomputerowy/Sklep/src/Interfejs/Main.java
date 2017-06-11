@@ -1,5 +1,7 @@
 package Interfejs;
 
+import javax.swing.JFrame;
+
 public class Main {
 
 	/*
@@ -15,11 +17,15 @@ public class Main {
 	 * Dodaæ animacje ruchu klientów
 	 * Dodaæ mijaj¹cy czas obs³ugi klienta przy kasie
 	 * 
-	 * 
+	 * -program rusza z maina nie z okna
 	 * 
 	 */
 	public static void main(String[] args) {
-
+		Okno okno = new Okno();
+		okno.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		okno.setSize(1000, 700);
+		okno.setVisible(true);
+		okno.setTitle("Sklep Komputerowy");
 	}
 
 }

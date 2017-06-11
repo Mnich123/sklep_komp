@@ -19,7 +19,7 @@ public class Okno extends JFrame {
 
 	private Vector<Kasa> kasy = new Vector<Kasa>();
 	private Vector<Thread> kasyWatki = new Vector<Thread>();
-	// private Vector<JLabel> klienci = new Vector<JLabel>();
+	//private Vector<JLabel> klienci = new Vector<JLabel>();
 	private Vector<Klient> klienci = new Vector<Klient>();
 	private Vector<JLabel> kasyEtykiety = new Vector<JLabel>();
 
@@ -338,12 +338,5 @@ public class Okno extends JFrame {
 	}
 
 	public static void main(String args[]) {
-
-		Okno okno = new Okno();
-		okno.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		okno.setSize(1000, 700);
-		okno.setVisible(true);
-		okno.setTitle("Sklep Komputerowy");
-
 	}
 }

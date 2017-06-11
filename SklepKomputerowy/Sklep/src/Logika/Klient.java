@@ -18,7 +18,7 @@ public class Klient extends Osoba {
 	public Klient(){
 		
 		this.czyWKolejce = false;
-		ImageIcon nowyKlient = new ImageIcon(getClass().getResource("klient.png")); ;
+		ImageIcon nowyKlient = new ImageIcon(getClass().getResource("klient.png"));
 		
 		obrazKlienta = new JLabel(nowyKlient);
 		
@@ -35,7 +35,7 @@ public class Klient extends Osoba {
 		String wszytkieProdukty = "";
 		
 		for( int i = 0 ; i < koszyk.size(); i++){
-			wszytkieProdukty+= koszyk.get(i).pobierzNazwe() + "\n";
+			wszytkieProdukty+= koszyk.get(i).getNazwa() + "\n";
 			
 		}
 		
@@ -53,9 +53,9 @@ public class Klient extends Osoba {
 	}
 	
 	public boolean usunProdukt(int pozycjaWKoszyku){
-		if( koszyk.get(0).pobierzCzySprzedane() == false){
-			koszyk.get(0).ustawCzySprzedane(true);
-			koszyk.remove(0);
+		if( koszyk.get(pozycjaWKoszyku).pobierzCzySprzedane() == false){
+			koszyk.get(pozycjaWKoszyku).ustawCzySprzedane(true);
+			koszyk.remove(pozycjaWKoszyku);
 			return true;
 		}
 
