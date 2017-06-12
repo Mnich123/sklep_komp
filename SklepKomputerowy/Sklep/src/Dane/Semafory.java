@@ -7,4 +7,5 @@ public class Semafory {
 
 	public static Semaphore semSklep = new Semaphore(1);
 	public static Vector<Semaphore> semKasy = new Vector<Semaphore>(0);
+	
 }

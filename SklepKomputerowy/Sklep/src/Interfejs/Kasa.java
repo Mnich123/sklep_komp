@@ -9,17 +9,27 @@ import javax.swing.JLabel;
 
 import Dane.Stale;
 import Logika.Klient;
+import Logika.Produkt;
 import Logika.Sklep;
+import bazaDanych.ProduktStore;
 
 public class Kasa implements Runnable {
 
 	private Vector<Klient> kolejka = new Vector<Klient>();
 	
+	private Vector<Produkt> sprzedaneProdukty = new Vector<Produkt>();
+	
+	private Vector<String>	czySprzedane = new Vector<String>();
+	
 	private Random random = new Random();
+
+	private ProduktStore produktStore = new ProduktStore();
 	
 	private JLabel obrazKasy;
 
 	private int id;
+	
+	private String wszystkieProdukty = "";
 
 	private boolean czyWidoczna;
 
@@ -46,12 +56,42 @@ public class Kasa implements Runnable {
 	public void usunKlientowZKolejki() {
 		kolejka.clear();
 	}
-	
+	public void zaktualizujOknoProduktow(){
+		String wstkie ="<html>";
+		int j = 0 ;
+		for( Produkt i : sprzedaneProdukty)
+		{
+			
+			wstkie +=i.toString() + czySprzedane.get(j) +  "<br>";
+			j++;
+		}
+		wstkie += "</html>";
+		obrazKasy.setToolTipText(wstkie);
+	}
 	public void usunKlientaZKolejki() {
 	
 			
 			kolejka.get(0).ustawCzyWKolejce(false);
-	
+
+			sprzedaneProdukty.addElement(kolejka.get(0).pobierzPierwszyProdukt());
+			
+			
+			
+			if(produktStore.usunProduktZBazy(kolejka.get(0).pobierzPierwszyProdukt().getIDProduktu())){
+				czySprzedane.add(" - SUCCESS - ");
+			}
+			else{
+
+				czySprzedane.add(" - FAILURE - ");
+			}
+			
+
+			zaktualizujOknoProduktow();
+			
+			kolejka.get(0).usunProdukty();
+			
+			
+			
 			kolejka.remove(0);
 			
 			if (kolejka.size() == 0)
@@ -111,6 +151,8 @@ public class Kasa implements Runnable {
 			e.printStackTrace();
 		}
 		
+		System.out.println("Usuniêto z bazy produkt: " + kolejka.get(0).pobierzProdukty());
+		
 	}
 
 	public JLabel pobierzEtykiete() {
@@ -127,7 +169,7 @@ public class Kasa implements Runnable {
 					Dane.Semafory.semSklep.acquire();
 					if(Dane.Statyczne.pauza){
 						try {
-							TimeUnit.MILLISECONDS.sleep(100);
+							TimeUnit.MILLISECONDS.sleep(500);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
@@ -153,7 +195,7 @@ public class Kasa implements Runnable {
 				
 				Dane.Semafory.semSklep.release();
 				try {
-					TimeUnit.MILLISECONDS.sleep(1);
+					TimeUnit.MILLISECONDS.sleep(200);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

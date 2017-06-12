@@ -1,36 +1,141 @@
 package bazaDanych;
 
-import org.hibernate.Session;  
-import org.hibernate.SessionFactory;  
-import org.hibernate.Transaction;  
-import org.hibernate.cfg.Configuration;  
+import java.util.List;
+import java.util.Random;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Projections;
+import org.hibernate.type.IntegerType;
+
 import Logika.Produkt;
 
 public class ProduktStore {
 
-	public static void main(String[] args) {  
-	      
-	    //creating configuration object  
-	    Configuration cfg=new Configuration();  
-	    cfg.configure("hibernate.cfg.xml");//populates the data of the configuration file  
-	      
-	    //creating seession factory object  
-	    SessionFactory factory=cfg.buildSessionFactory();  
-	      
-	    //creating session object  
-	    Session session=factory.openSession();  
-	     
-	    //creating transaction object  
-	    Transaction t=session.beginTransaction();  
-	          
-	    Produkt e1=new Produkt(); //przykladowa transakcja, dodaje nowy produkt o cenie 4 i nazwie gra, id samoinkrementowalne
-	    e1.setCena(4);
-	    e1.setNazwa("gra");
-	    session.persist(e1);//persisting the object  
-	    t.commit();//transaction is committed  
-	    session.close();  
-	      
-	    System.out.println("successfully saved"+e1.getCena()+" "+e1.getid());  
-	      
-	}   
+	// public static Configuration cfg = new Configuration();
+	// public static SessionFactory factory = null;
+
+	public static void main(String[] args) {
+
+		
+	}
+
+	public void dodajProduktDoBazy(String nazwa, int cena) {
+
+		Session session = Interfejs.Main.factory.openSession();
+
+		Transaction t = session.beginTransaction();
+
+		Produkt e1 = new Produkt();
+		e1.setCena(cena);
+		e1.setNazwa(nazwa);
+		session.persist(e1);
+		t.commit();
+
+		session.close();
+
+		System.out.println("successfully saved" + e1.getCena() + " " + e1.getIDProduktu());
+		Dane.Statyczne.maksPozycji++;
+
+	}
+
+	public boolean usunProduktZBazy(int idProduktu) {
+
+		Session session = Interfejs.Main.factory.openSession();
+
+		Transaction t = session.beginTransaction();
+
+		Query<String> query1 = session.createQuery("SELECT P.IDProduktu FROM Produkt P where :sprawdzaneID = P.IDProduktu ");
+		
+		query1.setParameter("sprawdzaneID", idProduktu);
+		
+		
+		List<String> list = query1.list();
+		if(list.isEmpty()) return false;
+
+	
+		Query<String> query2 = session.createQuery("DELETE Produkt P where :sprawdzaneID = P.IDProduktu ");
+		query2.setParameter("sprawdzaneID", idProduktu);
+		query2.executeUpdate();
+
+		t.commit();
+		session.close();
+		
+		return true;
+		
+	}
+
+	public Number pobierzIloscWierszy() {
+
+		Session session = Interfejs.Main.factory.openSession();
+
+		Transaction t = session.beginTransaction();
+
+		return (Number) session.createCriteria("Logika.Produkt").setProjection(Projections.rowCount()).uniqueResult();
+
+	}
+	public int pobierzLiczbeZZapytania(){
+		Session session = Interfejs.Main.factory.openSession();
+
+		Transaction t = session.beginTransaction();
+		
+		int count = ((Long)session.getSession().createQuery("select count(*) from Book").uniqueResult()).intValue();
+		
+		return count;
+	}
+	
+	public Produkt pobierzProduktZBazy(){
+		
+		
+		
+		Session session = Interfejs.Main.factory.openSession();
+
+		Transaction t = session.beginTransaction();
+		
+
+		Random losowa = new Random();
+		int licznik = losowa.nextInt(Dane.Statyczne.maksPozycji); 
+		//licznik = 1;
+		
+		
+		Query<String> query = session.createQuery("SELECT P.IDProduktu FROM Produkt P WHERE :licznik = P.IDProduktu");
+		query.setParameter("licznik", licznik);
+		List<String> list = query.list();
+		System.out.println(list.toString());
+
+		while( list.isEmpty()){
+			licznik = losowa.nextInt(500);
+			//licznik = 9;
+			query = session.createQuery("SELECT P.Nazwa FROM Produkt P WHERE :licznik = P.IDProduktu");
+			query.setParameter("licznik", licznik);
+			list = query.list();
+		}
+		
+		Produkt nowy = new Produkt();
+		int id = licznik;
+		
+		query = session.createQuery("SELECT P.Nazwa FROM Produkt P WHERE :licznik = P.IDProduktu");
+		query.setParameter("licznik", licznik);
+		list = query.list();
+		String nazwa = list.toString();
+		
+
+		query = session.createQuery("SELECT P.Cena FROM Produkt P WHERE :licznik = P.IDProduktu");
+		query.setParameter("licznik", licznik);
+		String cena = query.list().toString();	
+		
+		
+		
+		nowy.setIDProduktu(id);
+		nowy.setNazwa(nazwa);
+		nowy.setFejkCena(cena);
+		session.close();
+		
+		return nowy;
+		
+		
+	}
 }

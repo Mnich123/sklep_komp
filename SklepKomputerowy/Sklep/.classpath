@@ -4,7 +4,7 @@
 	<classpathentry excluding="BazaDanych/|BazaDanych/" kind="src" path="src"/>
 	<classpathentry kind="src" path="resources"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/hibernate"/>
-	<classpathentry exported="true" kind="lib" path="F:/msdbconnector/sqljdbc_6.0/enu/jre8/sqljdbc42.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Paweł/Desktop/BazaDoProjektu/sqljdbc42.jar"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/hibernate5"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

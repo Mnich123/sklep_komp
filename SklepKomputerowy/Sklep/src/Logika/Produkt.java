@@ -2,16 +2,18 @@ package Logika;
 
 public class Produkt {
 
-	private int id;
+	private int IDProduktu;
 	private String nazwa;
 	private int cena;
+	private String fejkCena = null;
 	private boolean czySprzedane;
 
 	public Produkt() {
+		
 	}
 
-	public Produkt(int id, String nazwa, int cena) {
-		this.id = id;
+	public Produkt(int IDProduktu, String nazwa, int cena) {
+		this.IDProduktu = IDProduktu;
 		this.nazwa = nazwa;
 		this.cena = cena;
 		this.czySprzedane = false;
@@ -32,13 +34,18 @@ public class Produkt {
 	public void setNazwa(String nazwa) {
 		this.nazwa = nazwa;
 	}
-
-	public int getid() {
-		return this.id;
+	public void setFejkCena(String fejk){
+		this.fejkCena = fejk;
+	}
+	public String getFejkCena(){
+		return this.fejkCena;
+	}
+	public int getIDProduktu() {
+		return this.IDProduktu;
 	}
 
-	public void setid(int id) {
-		this.id = id;
+	public void setIDProduktu(int idProduktu) {
+		this.IDProduktu = idProduktu;
 	}
 
 	public boolean pobierzCzySprzedane() {
@@ -51,13 +58,15 @@ public class Produkt {
 
 	@Override
 	public int hashCode() {
-		return id;
+		return IDProduktu;
 	}
 
 	public boolean equels(Object o) {
 		Produkt p = (Produkt) o;
 
-		return this.getid() == p.getid();
+		return this.getIDProduktu() == p.getIDProduktu();
 	}
-
+	public String toString(){
+		return "ID: " + this.IDProduktu + "\t" + this.nazwa + "\t" + this.fejkCena + "zl";
+	}
 }

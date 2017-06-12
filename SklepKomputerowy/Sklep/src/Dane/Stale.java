@@ -1,5 +1,6 @@
 package Dane;
 
+import java.util.Vector;
 
 public class Stale {
 	
@@ -15,9 +16,10 @@ public class Stale {
 	
 	public final class Liczebnosci{
 
-		public static final int kasaMax = 1000;
-		public static final int klientMax = 10000; 
+		public static final int kasaMax = 4;
+		public static final int klientMax = 20; 
 	}
+	
 	
 }
 

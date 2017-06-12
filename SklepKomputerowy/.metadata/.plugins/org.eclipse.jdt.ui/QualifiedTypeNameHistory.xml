@@ -14,7 +14,15 @@
 <fullyQualifiedTypeName name="java.lang.Thread"/>
 <fullyQualifiedTypeName name="Dane.Semafory"/>
 <fullyQualifiedTypeName name="java.util.concurrent.TimeUnit"/>
-<fullyQualifiedTypeName name="Dane.Statyczne"/>
 <fullyQualifiedTypeName name="Dane.Stale"/>
+<fullyQualifiedTypeName name="bazaDanych.ProduktStore"/>
+<fullyQualifiedTypeName name="org.hibernate.criterion.Projections"/>
+<fullyQualifiedTypeName name="org.hibernate.type.IntegerType"/>
+<fullyQualifiedTypeName name="Logika.Produkt"/>
+<fullyQualifiedTypeName name="Dane.Statyczne"/>
 <fullyQualifiedTypeName name="Dane.Stale.Liczebnosci"/>
+<fullyQualifiedTypeName name="java.util.Vector"/>
+<fullyQualifiedTypeName name="Dane.Stale.NazwyProduktow"/>
+<fullyQualifiedTypeName name="java.util.Random"/>
+<fullyQualifiedTypeName name="Interfejs.Main"/>
 </qualifiedTypeNameHistroy>

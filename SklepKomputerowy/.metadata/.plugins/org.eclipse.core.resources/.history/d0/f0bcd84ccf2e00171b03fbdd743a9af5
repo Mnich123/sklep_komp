@@ -1,9 +1,0 @@
-package Logika;
-
-import java.util.concurrent.Semaphore;
-
-public class Statyczne {
-	
-	public static Semaphore semSklep = new Semaphore(0);	
-	
-}

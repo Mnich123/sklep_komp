@@ -3,6 +3,7 @@ package Interfejs;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 import java.util.Vector;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
@@ -13,9 +14,15 @@ import javax.swing.JLabel;
 
 import Dane.Stale;
 import Logika.Klient;
+import Logika.Produkt;
+import bazaDanych.ProduktStore;
 
 public class Okno extends JFrame {
 	private static final long serialVersionUID = 1L;
+	private ProduktStore produktStore = new ProduktStore();
+	public  String[] nazwy = {"Sluchawki" , "Procesor", "G³oœniki" , "Laptop" , "Monitor", "Mikrofon" ,"Mysz" ,"Klawiatura", "Pendrive", "Telefon", "PC", "WiedŸmin 3: Dziki Gon"  };
+	
+	
 
 	private Vector<Kasa> kasy = new Vector<Kasa>();
 	private Vector<Thread> kasyWatki = new Vector<Thread>();
@@ -54,13 +61,14 @@ public class Okno extends JFrame {
 		l_kolejkaDoReklamacji = new JLabel("Reklamacje");
 
 		// Je¿eli nie ustawisz rozmiaru, to nie bedzie wyswietlane
-
-		l_kasa.setSize(l_kasa.getText().length() * 8, 10);
-		l_sklep.setSize(l_sklep.getText().length() * 8, 10);
-		l_reklamacje.setSize(l_reklamacje.getText().length() * 8, 10);
-		l_kolejkaDoKasy.setSize(l_kolejkaDoKasy.getText().length() * 8, 10);
-		l_kolejkaDoReklamacji.setSize(l_kolejkaDoReklamacji.getText().length() * 8, 10);
-		l_liczbaKlientow.setSize(l_liczbaKlientow.getText().length() * 8, 10);
+		int rozmiarZnaku = 8 ;
+		int wysokoscZnaku = 10 ;
+		l_kasa.setSize(l_kasa.getText().length() * rozmiarZnaku, wysokoscZnaku);
+		l_sklep.setSize(l_sklep.getText().length() * rozmiarZnaku, wysokoscZnaku);
+		l_reklamacje.setSize(l_reklamacje.getText().length() * rozmiarZnaku, wysokoscZnaku);
+		l_kolejkaDoKasy.setSize(l_kolejkaDoKasy.getText().length() * rozmiarZnaku, wysokoscZnaku);
+		l_kolejkaDoReklamacji.setSize(l_kolejkaDoReklamacji.getText().length() * rozmiarZnaku, wysokoscZnaku);
+		l_liczbaKlientow.setSize(l_liczbaKlientow.getText().length() * rozmiarZnaku, wysokoscZnaku);
 
 		l_sklep.setLocation(new Point(20, 20));
 		l_kasa.setLocation(new Point(20, 70));
@@ -131,31 +139,32 @@ public class Okno extends JFrame {
 				startuj();
 			}
 		});
-		
+
 		b_stop.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				stopuj();
 			}
 		});
+		b_dodajProdukt.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				produktStore.dodajProduktDoBazy(nazwy[new Random().nextInt(12)], new Random().nextInt(2000) + 200);
+			}
+		});
 		
 		inicjalizujKlientow();
 		inicjalizujKasy();
-		for( int i = 0 ; i < 7; i++){
-			dodajKase();
-				
-		}
-		for( int i = 0 ; i < 100; i++){
-
-			dodajKlienta();
-		}	
+		
 	}
 
 	public void inicjalizujKlientow() {
 		for (int i = 0; i < Dane.Stale.Liczebnosci.klientMax; i++) {
 			klienci.add(new Klient());
+
+			klienci.lastElement().dodajProdukt(produktStore.pobierzProduktZBazy());
 			klienci.lastElement().pobierzEtykiete()
-					.setToolTipText(klienci.lastElement().pobierzImie() + klienci.lastElement().pobierzProdukty());
+					.setToolTipText(klienci.lastElement().pobierzProdukty());
 		}
 	}
 
@@ -203,6 +212,7 @@ public class Okno extends JFrame {
 		for (int i = 0; i < Dane.Stale.Liczebnosci.kasaMax; i++) {
 			
 			if (kasy.get(i).pobierzCzyWidoczna()) {
+				kasy.get(i).pobierzEtykiete().setToolTipText("<html></html>");
 				kasy.get(i).usunKlientowZKolejki();
 				kasyEtykiety.get(i+1).setText("Klienci: 0");
 				remove(kasy.get(i).pobierzEtykiete());
@@ -290,7 +300,12 @@ public class Okno extends JFrame {
 				(kasy.get(min).pobierzDlugoscKolejki() + 1) * (Stale.RozmiaryObrazów.klientY + 5) + 150);
 
 		kasy.get(min).dodajKlientaDoKolejki(klienci.get(licznikKlientow));
+		
 
+		klienci.get(licznikKlientow).dodajProdukt(produktStore.pobierzProduktZBazy());
+		klienci.get(licznikKlientow).pobierzEtykiete()
+				.setToolTipText(klienci.lastElement().pobierzProdukty());
+		
 		kasyEtykiety.get(min + 1).setText("Klienci: " + (kasy.get(min).pobierzDlugoscKolejki()));
 
 		add(klienci.get(licznikKlientow).pobierzEtykiete());
@@ -300,6 +315,8 @@ public class Okno extends JFrame {
 		liczbaKlientow++;
 
 		l_liczbaKlientow.setText("Liczba Klientow: " + (liczbaKlientow));
+		
+		
 
 		revalidate();
 

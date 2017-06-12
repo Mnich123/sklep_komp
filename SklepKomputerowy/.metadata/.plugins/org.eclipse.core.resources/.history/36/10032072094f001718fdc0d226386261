@@ -1,0 +1,98 @@
+package bazaDanych;
+
+import java.util.List;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Projections;
+
+import Logika.Produkt;
+
+public class ProduktStore {
+
+	//public static Configuration cfg = new Configuration();
+	//public static SessionFactory factory = null;
+
+	public static void main(String[] args) {
+
+		
+		Configuration cfg = new Configuration();
+		cfg.configure("hibernate.cfg.xml");
+		SessionFactory factory = cfg.buildSessionFactory();						
+
+		//SessionFactory factory = cfg.buildSessionFactory();
+
+		
+		
+		Session session = factory.openSession();
+
+		Transaction t = session.beginTransaction();
+
+		
+		
+		
+		//Query<String> query = session.createQuery("SELECT count(1) from Produkt P ");
+		//query.executeUpdate();
+		
+		//List<String> list = query.list();
+		
+		System.out.println( (Number) session.createCriteria("Logika.Produkt").setProjection(Projections.rowCount()).uniqueResult());
+		 
+		t.commit();// transaction is committed
+		
+		session.close();
+		
+
+	}
+	public void dodajProduktDoBazy(String nazwa, int cena){
+		
+		
+		Session session = Interfejs.Main.factory.openSession();
+
+		Transaction t = session.beginTransaction();
+		
+		
+		Produkt e1 = new Produkt(); 
+		e1.setCena(cena);
+		e1.setNazwa(nazwa);
+		session.persist(e1);// persisting the object
+		t.commit();// transaction is committed
+		
+		session.close();
+
+		System.out.println("successfully saved" + e1.getCena() + " " + e1.getIDProduktu());
+		
+	}
+	public void usunProduktZBazy(){
+	
+
+		Session session = Interfejs.Main.factory.openSession();
+
+		Transaction t = session.beginTransaction();
+
+		/*
+		Produkt e1 = new Produkt(); // przykladowa transakcja, dodaje nowy
+									// produkt o cenie 4 i nazwie gra, id
+									// samoinkrementowalne
+		e1.setCena(4);
+		e1.setNazwa("CS:GO");
+		session.persist(e1);// persisting the object
+		t.commit();// transaction is committed
+		session.close();
+
+		System.out.println("successfully saved" + e1.getCena() + " " + e1.getid());
+		
+		*/
+		
+		Query<String> query = session.createQuery("DELETE Produkt P where P.Nazwa like 'CS:GO1' ");
+		query.executeUpdate();
+		
+		//List<String> list = query.list();
+		
+		t.commit();
+		session.close();
+	}
+}

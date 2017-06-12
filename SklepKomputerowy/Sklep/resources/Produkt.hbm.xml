@@ -13,7 +13,7 @@
 <hibernate-mapping package="Logika">
 
     <class name="Produkt" table="Produkt">
-        <id name="id" column="IDProduktu">
+        <id name="IDProduktu" column="IDProduktu">
             <generator class="increment"/>
         </id>
         <property name="Nazwa" column="Nazwa"/>

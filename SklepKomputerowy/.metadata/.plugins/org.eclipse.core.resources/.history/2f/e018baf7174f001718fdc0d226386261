@@ -1,0 +1,63 @@
+package Logika;
+
+public class Produkt {
+
+	private int IDProduktu;
+	private String nazwa;
+	private int cena;
+	private boolean czySprzedane;
+
+	public Produkt() {
+	}
+
+	public Produkt(int IDProduktu, String nazwa, int cena) {
+		this.IDProduktu = IDProduktu;
+		this.nazwa = nazwa;
+		this.cena = cena;
+		this.czySprzedane = false;
+	}
+
+	public int getCena() {
+		return this.cena;
+	}
+
+	public void setCena(int cena) {
+		this.cena = cena;
+	}
+
+	public String getNazwa() {
+		return this.nazwa;
+	}
+
+	public void setNazwa(String nazwa) {
+		this.nazwa = nazwa;
+	}
+
+	public int getIDProduktu() {
+		return this.IDProduktu;
+	}
+
+	public void setIDProduktu(int idProduktu) {
+		this.IDProduktu = idProduktu;
+	}
+
+	public boolean pobierzCzySprzedane() {
+		return czySprzedane;
+	}
+
+	public void ustawCzySprzedane(boolean decyzja) {
+		this.czySprzedane = decyzja;
+	}
+
+	@Override
+	public int hashCode() {
+		return IDProduktu;
+	}
+
+	public boolean equels(Object o) {
+		Produkt p = (Produkt) o;
+
+		return this.getIDProduktu() == p.getIDProduktu();
+	}
+
+}
