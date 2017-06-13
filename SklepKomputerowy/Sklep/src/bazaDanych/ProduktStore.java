@@ -13,16 +13,22 @@ import org.hibernate.type.IntegerType;
 
 import Logika.Produkt;
 
+/**
+ * 
+ * Klasa odpowiedzialna za komunikacjê z baz¹ danych
+ * 
+ * @author Pawe³ Tarsa³a, Mateusz Miko³ajuk, Micha³ Lewandowski
+ *
+ */
 public class ProduktStore {
 
-	// public static Configuration cfg = new Configuration();
-	// public static SessionFactory factory = null;
-
-	public static void main(String[] args) {
-
-		
-	}
-
+	/**
+	 * 
+	 * Dodawanie nowego produktu o nazwie "nazwa" oraz cenie "cena" do bazy 
+	 * 
+	 * @param nazwa Nazwaw produktu do dodania do bazy 
+	 * @param cena Cena produktu do dodania do bazy
+	 */
 	public void dodajProduktDoBazy(String nazwa, int cena) {
 
 		Session session = Interfejs.Main.factory.openSession();
@@ -41,6 +47,13 @@ public class ProduktStore {
 		Dane.Statyczne.maksPozycji++;
 
 	}
+	
+	/**
+	 * Usuwanie produktu o identyfikatorze "idProduktu" z bazy.
+	 * Po pomyœlnym usuniêciu funkcja zwraca logiczne true w przeciwnym przypadku  lagiczne "false" 
+	 * @param idProduktu Identyfikator produktu do usuniecia
+	 * @return boolean
+	 */
 
 	public boolean usunProduktZBazy(int idProduktu) {
 
@@ -68,25 +81,12 @@ public class ProduktStore {
 		
 	}
 
-	public Number pobierzIloscWierszy() {
-
-		Session session = Interfejs.Main.factory.openSession();
-
-		Transaction t = session.beginTransaction();
-
-		return (Number) session.createCriteria("Logika.Produkt").setProjection(Projections.rowCount()).uniqueResult();
-
-	}
-	public int pobierzLiczbeZZapytania(){
-		Session session = Interfejs.Main.factory.openSession();
-
-		Transaction t = session.beginTransaction();
-		
-		int count = ((Long)session.getSession().createQuery("select count(*) from Book").uniqueResult()).intValue();
-		
-		return count;
-	}
 	
+	/**
+	 * Pobieranie produktu z bazy. Po pobraniu produktu zostaje on zwrócony przez funkcjê
+	 * 
+	 * @return Produkt
+	 */
 	public Produkt pobierzProduktZBazy(){
 		
 		
@@ -104,7 +104,6 @@ public class ProduktStore {
 		Query<String> query = session.createQuery("SELECT P.IDProduktu FROM Produkt P WHERE :licznik = P.IDProduktu");
 		query.setParameter("licznik", licznik);
 		List<String> list = query.list();
-		System.out.println(list.toString());
 
 		while( list.isEmpty()){
 			licznik = losowa.nextInt(500);

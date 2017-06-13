@@ -1,10 +1,22 @@
 package Dane;
 
-import java.util.Vector;
-
+/**
+ * 
+ * Sta³e w programie.
+ * 
+ * 
+ * @author Pawe³ Tarsa³a, Mateusz Miko³ajuk, Micha³ Lewandowski
+ *
+ */
 public class Stale {
 	
+	/**
+	 * Sta³e odpowiedzialne za rozmiary obrazów
+	 * @author Pawe³ Tarsa³a, Mateusz Miko³ajuk, Micha³ Lewandowski
+	 *
+	 */
 	public final class RozmiaryObrazów {
+		
 		
 		public static final int kasaX = 100;
 		public static final int kasaY = 89;
@@ -13,11 +25,19 @@ public class Stale {
 		
 		
 	}
-	
+	/**
+	 * Sta³e odpowiedzialne za maskymalne liczebnoœci zawarte w programie
+	 * 
+	 * @author Pawe³ Tarsa³a, Mateusz Miko³ajuk, Micha³ Lewandowski
+	 *
+	 */
 	public final class Liczebnosci{
 
-		public static final int kasaMax = 4;
-		public static final int klientMax = 20; 
+		public static final int kasaMax = 15;
+		public static final int klientMax = 300; 
+		public static final int cenaProduktuMax = 2000;
+		public static final int cenaProduktuMin = 200;
+		public static final int liczbaNazwProduktow = 12;
 	}
 	
 	

@@ -10,9 +10,15 @@ import javax.swing.JLabel;
 import Dane.Stale;
 import Logika.Klient;
 import Logika.Produkt;
-import Logika.Sklep;
 import bazaDanych.ProduktStore;
 
+/**
+ * 
+ * Klasa Kasa jest odpowiedzialna za zarz¹dzanie kasami
+ * 
+ * @author Pawe³ Tarsa³a, Mateusz Miko³ajuk, Micha³ Lewandowski
+ *
+ */
 public class Kasa implements Runnable {
 
 	private Vector<Klient> kolejka = new Vector<Klient>();
@@ -29,14 +35,17 @@ public class Kasa implements Runnable {
 
 	private int id;
 	
-	private String wszystkieProdukty = "";
 
 	private boolean czyWidoczna;
 
 	private Okno okno = null;
 
-	private Sklep sklep = null;
 
+	/**
+	 * 
+	 * Tworzenie kasy o podanym identyfikatorze "id". 
+	 * @param id
+	 */
 	public Kasa(int id) {
 
 		this.id = id;
@@ -53,21 +62,30 @@ public class Kasa implements Runnable {
 
 	}
 
+	/**
+	 * Wyczyszczenie ca³ej kolejki z klientów 
+	 */
 	public void usunKlientowZKolejki() {
 		kolejka.clear();
 	}
+	/**
+	 * Aktualizuje okienko pop-up 
+	 */
 	public void zaktualizujOknoProduktow(){
-		String wstkie ="<html>";
+		String wszystkieProdutky ="<html>";
 		int j = 0 ;
 		for( Produkt i : sprzedaneProdukty)
 		{
 			
-			wstkie +=i.toString() + czySprzedane.get(j) +  "<br>";
+			wszystkieProdutky +=i.toString() + czySprzedane.get(j) +  "<br>";
 			j++;
 		}
-		wstkie += "</html>";
-		obrazKasy.setToolTipText(wstkie);
+		wszystkieProdutky += "</html>";
+		obrazKasy.setToolTipText(wszystkieProdutky);
 	}
+	/**
+	 * Usuwanie pierwszego klienta w kolejce
+	 */
 	public void usunKlientaZKolejki() {
 	
 			
@@ -105,48 +123,87 @@ public class Kasa implements Runnable {
 	
 		}
 
+	/**
+	 * Ustawienie widocznoœci kasy na oknie. Parametr "decyzja" okreœla decyzjê widocznoœci kasy.
+	 * 
+	 * @param decyzja
+	 */
 	public void ustawCzyWidoczna(boolean decyzja) {
 		this.czyWidoczna = decyzja;
 	}
 
+	/**
+	 * 
+	 * Ustawia na którym oknie ma byæ wyœwietlana kasa.
+	 * 
+	 * @param okno
+	 */
 	public void ustawOkno(Okno okno) {
 		this.okno = okno;
 	}
 
-	public void ustawSklep(Sklep sklep) {
-		this.sklep = sklep;
-	}
 
+	/**
+	 * 
+	 * Dodaje klienta do kolejki 
+	 * 
+	 * @param klient
+	 */
 	public void dodajKlientaDoKolejki(Klient klient) {
 
 		kolejka.add(klient);
 
 	}
 
+	/**
+	 * 
+	 * Pobiera Klienta z kolejki. Przy pomyœlnym pobraniu klienta zwraca wybranego klienta, w przeciwnym przypaku zwraca null
+	 * 
+	 * @return
+	 */
 	public Klient pobierzPierwszegoKlienta() {
 		if (kolejka.size() != 0) {
 			return kolejka.get(0);
 		}
 		return null;
 	}
-	
+	/**
+	 * Pobiera identyfikator kasy
+	 * 
+	 * @return
+	 */
 	public int pobierzId(){
 		return this.id;
 	}
 
+	
+	/**
+	 * Zwraca d³ugoœæ kolejki
+	 * @return
+	 */
 	public int pobierzDlugoscKolejki() {
 		return kolejka.size();
 	}
 
+	/**
+	 * 
+	 * Zwraca widocznoœæ kasy na oknie
+	 * 
+	 * @return 
+	 */
 	public boolean pobierzCzyWidoczna() {
 		return this.czyWidoczna;
 
 	}
 
+	/**
+	 * 
+	 * Symulacja realizacji us³ugi 
+	 */
 	public void realizujUsluge() {
 		
 		try {
-			TimeUnit.MILLISECONDS.sleep(random.nextInt(100));
+			TimeUnit.MILLISECONDS.sleep(random.nextInt(500));
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -159,13 +216,16 @@ public class Kasa implements Runnable {
 		return obrazKasy;
 	}
 
+	/**
+	 * Uruchomienie w¹tku kasy oraz wyczekiwanie na przyjœcie klienta do kasy 
+	 */
 	@Override
 	public void run() {
 		while (Dane.Statyczne.wlaczenieKas) {
 			
 
 			try {
-					Dane.Semafory.semKasy.get(id).acquire();
+					//Dane.Semafory.semKasy.get(id).acquire();
 					Dane.Semafory.semSklep.acquire();
 					if(Dane.Statyczne.pauza){
 						try {
@@ -175,7 +235,7 @@ public class Kasa implements Runnable {
 						}
 						finally{
 							Dane.Semafory.semSklep.release();
-							Dane.Semafory.semKasy.get(id).release();
+							//Dane.Semafory.semKasy.get(id).release();
 						}
 
 						continue;
@@ -200,8 +260,6 @@ public class Kasa implements Runnable {
 					e.printStackTrace();
 				}
 			}
-
-		
 
 	}
 	

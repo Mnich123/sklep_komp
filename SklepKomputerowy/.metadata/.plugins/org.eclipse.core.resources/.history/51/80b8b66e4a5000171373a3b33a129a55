@@ -1,0 +1,15 @@
+package Dane;
+
+import java.util.Vector;
+import java.util.concurrent.Semaphore;
+/**
+ * 
+ * @author Pawe³ Tarsa³a, Mateusz Miko³ajuk, Micha³ Lewandowski
+ *
+ */
+public class Semafory {
+	
+	public static Semaphore semSklep = new Semaphore(1);
+	public static Vector<Semaphore> semKasy = new Vector<Semaphore>(0);
+	
+}

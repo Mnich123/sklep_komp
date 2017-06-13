@@ -7,6 +7,14 @@ import javax.swing.JLabel;
 
 import Dane.Stale;
 
+/**
+ * 
+ * Klasa Klient jest odpowiedzialna za zarz¹dzanie danymi klientami bêd¹cymi w sklepie.
+ * Klasa dziedzicy po klasie Osoba
+ * 
+ * @author Pawe³ Tarsa³a, Mateusz Miko³ajuk, Micha³ Lewandowski
+ *
+ */
 public class Klient extends Osoba {
 
 	private Vector<Produkt> koszyk = new Vector<Produkt>();
@@ -15,6 +23,11 @@ public class Klient extends Osoba {
 
 	private boolean czyWKolejce;
 
+	/**
+	 * 
+	 * Tworzenie Klienta
+	 * 
+	 */
 	public Klient() {
 
 		this.czyWKolejce = false;
@@ -26,37 +39,79 @@ public class Klient extends Osoba {
 
 	}
 
+	/**
+	 * 
+	 * pobranie etykiety klienta
+	 * 
+	 * @return
+	 */
 	public JLabel pobierzEtykiete() {
 		return obrazKlienta;
 	}
 
+	/**
+	 * 
+	 * pobranie wszystkich produktow ze sklepu w formie ciagu znaków. Zwraca String.
+	 * @return
+	 */
 	public String pobierzProdukty() {
 
 		String wszytkieProdukty = "";
 
 		for (int i = 0; i < koszyk.size(); i++) {
 			wszytkieProdukty += koszyk.get(i).getIDProduktu() + ". " + koszyk.get(i).getNazwa() + " "
-					+ koszyk.get(i).getFejkCena() + "\n";
+					+ koszyk.get(i).getFejkCena() + "z³\n";
 		}
 
 		return wszytkieProdukty;
 	}
 
+	/**
+	 * Zwraca obecnosc klienta w jakiejkolwiek kolejce
+	 * 
+	 * @return
+	 */
 	public boolean pobierzCzyWKolejce() {
 		return this.czyWKolejce;
 	}
 
+	/**
+	 * 
+	 * Ustawia obecnosc klienta w kolejce uzywajac przy tym parametru "decyzja"
+	 * 
+	 * @param decyzja
+	 */
 	public void ustawCzyWKolejce(boolean decyzja) {
 		this.czyWKolejce = decyzja;
 	}
 
+	/**
+	 * 
+	 * Dodaje produkt do koszyka klienta
+	 * 
+	 * @param produkt
+	 */
 	public void dodajProdukt(Produkt produkt) {
 		koszyk.add(produkt);
 	}
+	/**
+	 * 
+	 * pobiera pierwszy produkt z koszyka klienta
+	 * 
+	 * @return
+	 */
 	public Produkt pobierzPierwszyProdukt(){
 		if(koszyk.size()==0) return null;
 		return koszyk.get(0);
 	}
+	/**
+	 * 
+	 * Usuwa produkt o pozycji "pozycjaWKoszyku" . 
+	 * Je¿eli operacja wykona³a sie poprawnie funkcja zwraca logiczne "true",
+	 * w przeciwnym wypadku logiczne "false"
+	 * @param pozycjaWKoszyku
+	 * @return
+	 */
 	public boolean usunProdukt(int pozycjaWKoszyku) {
 		if (koszyk.get(pozycjaWKoszyku).pobierzCzySprzedane() == false) {
 			koszyk.get(pozycjaWKoszyku).ustawCzySprzedane(true);
@@ -67,12 +122,12 @@ public class Klient extends Osoba {
 		koszyk.remove(0);
 		return false;
 	}
+	/**
+	 * 
+	 * Usuwa wszystkie produkty z koszyka
+	 * 
+	 */
 	public void usunProdukty(){
 			koszyk.clear();
-	}
-	@Override
-	public boolean equals(Object o) {
-		Klient k = (Klient) o;
-		return this.pobierzPESEL() == k.pobierzPESEL();
 	}
 }

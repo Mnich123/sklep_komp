@@ -1,0 +1,267 @@
+package Interfejs;
+
+import java.util.Random;
+import java.util.Vector;
+import java.util.concurrent.TimeUnit;
+
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+
+import Dane.Stale;
+import Logika.Klient;
+import Logika.Produkt;
+import bazaDanych.ProduktStore;
+
+/**
+ * 
+ * Klasa Kasa jest odpowiedzialna za zarz¹dzanie kasami
+ * 
+ * @author Pawe³ Tarsa³a, Mateusz Miko³ajuk, Micha³ Lewandowski
+ *
+ */
+public class Kasa implements Runnable {
+
+	private Vector<Klient> kolejka = new Vector<Klient>();
+	
+	private Vector<Produkt> sprzedaneProdukty = new Vector<Produkt>();
+	
+	private Vector<String>	czySprzedane = new Vector<String>();
+	
+	private Random random = new Random();
+
+	private ProduktStore produktStore = new ProduktStore();
+	
+	private JLabel obrazKasy;
+
+	private int id;
+	
+	private String wszystkieProdukty = "";
+
+	private boolean czyWidoczna;
+
+	private Okno okno = null;
+
+
+	/**
+	 * 
+	 * Tworzenie kasy o podanym identyfikatorze "id". 
+	 * @param id
+	 */
+	public Kasa(int id) {
+
+		this.id = id;
+
+		czyWidoczna = false;
+
+		ImageIcon nowaKasa = new ImageIcon(getClass().getResource("kasa.png"));
+
+		obrazKasy = new JLabel(nowaKasa);
+
+		obrazKasy.setSize(Dane.Stale.RozmiaryObrazów.kasaX, Stale.RozmiaryObrazów.kasaY);
+
+
+
+	}
+
+	/**
+	 * Wyczyszczenie ca³ej kolejki z klientów 
+	 */
+	public void usunKlientowZKolejki() {
+		kolejka.clear();
+	}
+	/**
+	 * Aktualizuje okienko pop-up 
+	 */
+	public void zaktualizujOknoProduktow(){
+		String wstkie ="<html>";
+		int j = 0 ;
+		for( Produkt i : sprzedaneProdukty)
+		{
+			
+			wstkie +=i.toString() + czySprzedane.get(j) +  "<br>";
+			j++;
+		}
+		wstkie += "</html>";
+		obrazKasy.setToolTipText(wstkie);
+	}
+	/**
+	 * Usuwanie pierwszego klienta w kolejce
+	 */
+	public void usunKlientaZKolejki() {
+	
+			
+			kolejka.get(0).ustawCzyWKolejce(false);
+
+			sprzedaneProdukty.addElement(kolejka.get(0).pobierzPierwszyProdukt());
+			
+			
+			
+			if(produktStore.usunProduktZBazy(kolejka.get(0).pobierzPierwszyProdukt().getIDProduktu())){
+				czySprzedane.add(" - SUCCESS - ");
+			}
+			else{
+
+				czySprzedane.add(" - FAILURE - ");
+			}
+			
+
+			zaktualizujOknoProduktow();
+			
+			kolejka.get(0).usunProdukty();
+			
+			
+			
+			kolejka.remove(0);
+			
+			if (kolejka.size() == 0)
+				return;
+	
+			// ustawianie klientów o jeden do przodu
+			for (int i = 0; i < kolejka.size(); i++) {
+				kolejka.get(i).pobierzEtykiete().setLocation(kolejka.get(i).pobierzEtykiete().getX(),
+						kolejka.get(i).pobierzEtykiete().getY() - Dane.Stale.RozmiaryObrazów.klientY - 5);
+			}
+	
+		}
+
+	/**
+	 * Ustawienie widocznoœci kasy na oknie. Parametr "decyzja" okreœla decyzjê widocznoœci kasy.
+	 * 
+	 * @param decyzja
+	 */
+	public void ustawCzyWidoczna(boolean decyzja) {
+		this.czyWidoczna = decyzja;
+	}
+
+	/**
+	 * 
+	 * Ustawia na którym oknie ma byæ wyœwietlana kasa.
+	 * 
+	 * @param okno
+	 */
+	public void ustawOkno(Okno okno) {
+		this.okno = okno;
+	}
+
+
+	/**
+	 * 
+	 * Dodaje klienta do kolejki 
+	 * 
+	 * @param klient
+	 */
+	public void dodajKlientaDoKolejki(Klient klient) {
+
+		kolejka.add(klient);
+
+	}
+
+	/**
+	 * 
+	 * Pobiera Klienta z kolejki. Przy pomyœlnym pobraniu klienta zwraca wybranego klienta, w przeciwnym przypaku zwraca null
+	 * 
+	 * @return
+	 */
+	public Klient pobierzPierwszegoKlienta() {
+		if (kolejka.size() != 0) {
+			return kolejka.get(0);
+		}
+		return null;
+	}
+	/**
+	 * Pobiera identyfikator kasy
+	 * 
+	 * @return
+	 */
+	public int pobierzId(){
+		return this.id;
+	}
+
+	
+	/**
+	 * Zwraca d³ugoœæ kolejki
+	 * @return
+	 */
+	public int pobierzDlugoscKolejki() {
+		return kolejka.size();
+	}
+
+	/**
+	 * 
+	 * Zwraca widocznoœæ kasy na oknie
+	 * 
+	 * @return 
+	 */
+	public boolean pobierzCzyWidoczna() {
+		return this.czyWidoczna;
+
+	}
+
+	/**
+	 * 
+	 * Symulacja realizacji us³ugi 
+	 */
+	public void realizujUsluge() {
+		
+		try {
+			TimeUnit.MILLISECONDS.sleep(random.nextInt(100));
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println("Usuniêto z bazy produkt: " + kolejka.get(0).pobierzProdukty());
+		
+	}
+
+	public JLabel pobierzEtykiete() {
+		return obrazKasy;
+	}
+
+	/**
+	 * Uruchomienie w¹tku kasy oraz wyczekiwanie na przyjœcie klienta do kasy 
+	 */
+	@Override
+	public void run() {
+		while (Dane.Statyczne.wlaczenieKas) {
+			
+
+			try {
+					Dane.Semafory.semKasy.get(id).acquire();
+					Dane.Semafory.semSklep.acquire();
+					if(Dane.Statyczne.pauza){
+						try {
+							TimeUnit.MILLISECONDS.sleep(500);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						finally{
+							Dane.Semafory.semSklep.release();
+							Dane.Semafory.semKasy.get(id).release();
+						}
+
+						continue;
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				if (!Dane.Statyczne.wlaczenieKas) {
+
+					Dane.Semafory.semSklep.release();
+					break;
+				}
+
+				realizujUsluge();
+				
+				okno.usunKlientaZKolejki(id);
+				
+				Dane.Semafory.semSklep.release();
+				try {
+					TimeUnit.MILLISECONDS.sleep(200);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+
+	}
+	
+}

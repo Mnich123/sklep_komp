@@ -1,0 +1,33 @@
+package Interfejs;
+
+import javax.swing.JFrame;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
+public class Main {
+
+	/*
+	 * TODO:
+	 * 
+	 * Opcjonalne:
+	 * Dodaæ animacje ruchu klientów
+	 * Dodaæ mijaj¹cy czas obs³ugi klienta przy kasie
+	 * 
+	 * 
+	 */
+	public static Configuration cfg = new Configuration();
+	public static SessionFactory factory = null;
+	public static void main(String[] args) {
+		cfg.configure("hibernate.cfg.xml");
+		factory = cfg.buildSessionFactory();	
+		
+		Okno okno = new Okno();
+		okno.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		okno.setSize(1000, 700);
+		okno.setVisible(true);
+		okno.setTitle("Sklep Komputerowy");
+	}
+
+}
